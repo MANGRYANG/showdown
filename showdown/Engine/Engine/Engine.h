@@ -1,6 +1,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Math/Vector2.h"
+
+struct KeyState
+{
+	bool isKeyDown = false;
+	bool wasKeyDown = false;
+};
 
 class ENGINE_API Engine
 {
@@ -19,6 +26,8 @@ protected:
 	void Update(float deltaTime);
 	void Render();
 
+	void EnableMouseInput();
+
 	
 protected:
 	// Variables for managing the engine
@@ -28,4 +37,8 @@ protected:
 	float m_targetFrameRate = 60.0f;
 	float m_targetOneFrameTime = 0.0f;
 	float m_deltaTime;
+
+	KeyState keyState[255];
+
+	Vector2 mousePosition;
 };

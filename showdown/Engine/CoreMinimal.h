@@ -7,6 +7,14 @@
 #include <crtdbg.h>
 
 
+enum class CursorType
+{
+	NoCursor,
+	SolidCursor,
+	NormalCursor
+};
+
+
 // Debugging purpose
 #ifdef _DEBUG
 #define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
