@@ -1,6 +1,8 @@
 #include "PCH.h"
 #include "Engine.h"
 
+#include <conio.h>
+
 Engine::Engine()
 	: m_inShutdown(false)
 {
@@ -19,6 +21,8 @@ void Engine::Run()
 
 	int64_t currentTime = time.QuadPart;
 	int64_t previousTime = currentTime;
+
+	EnableMouseInput();
 
 	while (true)
 	{
@@ -51,6 +55,7 @@ void Engine::Run()
 
 void Engine::Shutdown()
 {
+	m_inShutdown = true;
 }
 
 void Engine::SetTargetFrameRate(float targetFrameRate)
@@ -61,6 +66,41 @@ void Engine::SetTargetFrameRate(float targetFrameRate)
 
 void Engine::ProcessInput()
 {
+	static HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+
+	INPUT_RECORD record;
+	DWORD events;
+	if (PeekConsoleInput(inputHandle, &record, 1, &events) && events > 0)
+	{
+		if (ReadConsoleInput(inputHandle, &record, 1, &events))
+		{
+			switch (record.EventType)
+			{
+			case KEY_EVENT:
+			{
+				if (record.Event.KeyEvent.bKeyDown)
+				{
+					keyState[record.Event.KeyEvent.wVirtualKeyCode].isKeyDown = true;
+				}
+				else
+				{
+					keyState[record.Event.KeyEvent.wVirtualKeyCode].isKeyDown = false;
+				}
+			}
+			break;
+
+			case MOUSE_EVENT:
+			{
+				mousePosition.xpos = record.Event.MouseEvent.dwMousePosition.X;
+				mousePosition.ypos = record.Event.MouseEvent.dwMousePosition.Y;
+
+				keyState[VK_LBUTTON].isKeyDown
+					= (record.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED) != 0;
+			}
+			break;
+			}
+		}
+	}
 }
 
 void Engine::Update(float deltaTime)
@@ -69,5 +109,13 @@ void Engine::Update(float deltaTime)
 
 void Engine::Render()
 {
-	std::cout << "Rendering" << std::endl;
+}
+
+void Engine::EnableMouseInput()
+{
+	HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+
+	DWORD mode;
+	GetConsoleMode(inputHandle, &mode);
+	SetConsoleMode(inputHandle, mode | ENABLE_MOUSE_INPUT);
 }

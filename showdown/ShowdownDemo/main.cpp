@@ -1,3 +1,7 @@
-int main(void) {
-	return 0;
+#include "Game/Game.h"
+
+int main(void)
+{
+    Game game;
+    game.Run();
 }
