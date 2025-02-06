@@ -1,5 +1,6 @@
 #include "PCH.h"
 #include "Engine.h"
+#include "Actor/Actor.h"
 
 #include <conio.h>
 
@@ -62,6 +63,35 @@ void Engine::SetTargetFrameRate(float targetFrameRate)
 {
 	m_targetFrameRate = targetFrameRate;
 	m_targetOneFrameTime = 1.0f / targetFrameRate;
+}
+
+void Engine::LoadLevel(Level* newLevel)
+{
+	mainLevel = newLevel;
+}
+
+void Engine::AddActor(Actor* newActor)
+{
+	// 예외 처리.
+	if (mainLevel == nullptr)
+	{
+		return;
+	}
+
+	// 레벨에 액터 추가.
+	mainLevel->AddActor(newActor);
+}
+
+void Engine::DestroyActor(Actor* targetActor)
+{
+	// 예외 처리.
+	if (mainLevel == nullptr)
+	{
+		return;
+	}
+
+	// 레벨에 액터 추가.
+	targetActor->Destroy();
 }
 
 void Engine::ProcessInput()
