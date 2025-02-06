@@ -4,14 +4,54 @@
 
 #include <conio.h>
 
-Engine::Engine()
-	: m_inShutdown(false)
+BOOL WINAPI MessageProcessor(DWORD message)
 {
+	switch (message)
+	{
+	case CTRL_CLOSE_EVENT:
+		Engine::Get().Shutdown();
+		return true;
+
+	default:
+		return false;
+	}
+}
+
+Engine* Engine::instance = nullptr;
+
+Engine::Engine()
+	: m_inShutdown(false), mainLevel(nullptr), screenSize(220, 55)
+{
+	instance = this;
+
 	SetTargetFrameRate(60.0f);
+	
+	imageBuffer = new CHAR_INFO[(screenSize.xpos + 1) * screenSize.ypos + 1];
+	ClearImageBuffer();
+
+	COORD size = { (short)(screenSize.xpos), (short)(screenSize.ypos) };
+	renderTargets[0] = new ScreenBuffer(size);
+	renderTargets[1] = new ScreenBuffer(size);
+
+	Present();
+
+	SetConsoleCtrlHandler(MessageProcessor, true);
+
+	HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+	SetConsoleMode(inputHandle, ENABLE_MOUSE_INPUT | ENABLE_PROCESSED_INPUT | ENABLE_EXTENDED_FLAGS);
 }
 
 Engine::~Engine()
 {
+	if (mainLevel != nullptr)
+	{
+		delete mainLevel;
+	}
+
+	delete[] imageBuffer;
+
+	delete renderTargets[0];
+	delete renderTargets[1];
 }
 
 void Engine::Run()
@@ -72,26 +112,27 @@ void Engine::LoadLevel(Level* newLevel)
 
 void Engine::AddActor(Actor* newActor)
 {
-	// 예외 처리.
 	if (mainLevel == nullptr)
 	{
 		return;
 	}
 
-	// 레벨에 액터 추가.
 	mainLevel->AddActor(newActor);
 }
 
 void Engine::DestroyActor(Actor* targetActor)
 {
-	// 예외 처리.
 	if (mainLevel == nullptr)
 	{
 		return;
 	}
 
-	// 레벨에 액터 추가.
 	targetActor->Destroy();
+}
+
+Engine& Engine::Get()
+{
+	return *instance;
 }
 
 void Engine::ProcessInput()
@@ -135,10 +176,37 @@ void Engine::ProcessInput()
 
 void Engine::Update(float deltaTime)
 {
+	if (mainLevel != nullptr)
+	{
+		mainLevel->Update(deltaTime);
+	}
 }
 
 void Engine::Render()
 {
+	Clear();
+
+	if (mainLevel != nullptr)
+	{
+		mainLevel->Render();
+	}
+
+	Present();
+}
+
+void Engine::Clear()
+{
+	ClearImageBuffer();
+	GetRenderer()->Clear();
+}
+
+void Engine::Present()
+{
+	GetRenderer()->Draw(imageBuffer);
+
+	// Swap Buffer.
+	SetConsoleActiveScreenBuffer(GetRenderer()->buffer);
+	currentRenderTargetIndex = 1 - currentRenderTargetIndex;
 }
 
 void Engine::EnableMouseInput()
@@ -148,4 +216,33 @@ void Engine::EnableMouseInput()
 	DWORD mode;
 	GetConsoleMode(inputHandle, &mode);
 	SetConsoleMode(inputHandle, mode | ENABLE_MOUSE_INPUT);
+}
+
+void Engine::SavePreviouseKeyStates()
+{
+	for (int ix = 0; ix < 255; ++ix)
+	{
+		keyState[ix].wasKeyDown = keyState[ix].isKeyDown;
+	}
+}
+
+void Engine::ClearImageBuffer()
+{
+	for (int y = 0; y < screenSize.ypos; ++y)
+	{
+		for (int x = 0; x < screenSize.xpos + 1; ++x)
+		{
+			auto& buffer = imageBuffer[(y * (screenSize.xpos + 1)) + x];
+			buffer.Char.AsciiChar = ' ';
+			buffer.Attributes = 0;
+		}
+
+		auto& buffer = imageBuffer[(y * (screenSize.xpos + 1)) + screenSize.xpos];
+		buffer.Char.AsciiChar = '\n';
+		buffer.Attributes = 0;
+	}
+
+	auto& buffer = imageBuffer[(screenSize.xpos + 1) * screenSize.ypos];
+	buffer.Char.AsciiChar = '\0';
+	buffer.Attributes = 0;
 }
