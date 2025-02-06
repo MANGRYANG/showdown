@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Level/Level.h"
+#include "Render/ScreenBuffer.h"
 #include "Math/Vector2.h"
 
 struct KeyState
@@ -28,18 +29,27 @@ public:
 	void AddActor(Actor* newActor);
 	void DestroyActor(Actor* targetActor);
 
+	static Engine& Get();
+
 protected:
 	// Functions for game loop
 	void ProcessInput();
 	void Update(float deltaTime);
 	void Render();
 
+	void Clear();
+	void Present();
+
 	void EnableMouseInput();
+	void SavePreviouseKeyStates();
+
+	inline ScreenBuffer* GetRenderer() const { return renderTargets[currentRenderTargetIndex]; }
+	void ClearImageBuffer();
 
 	
 protected:
 	// Variables for managing the engine
-	bool m_inShutdown;
+	bool m_inShutdown = false;
 	bool m_shouldUpdate = true;
 
 	float m_targetFrameRate = 60.0f;
@@ -50,5 +60,13 @@ protected:
 
 	KeyState keyState[255];
 
+	Vector2 screenSize;
 	Vector2 mousePosition;
+
+	CHAR_INFO* imageBuffer = nullptr;
+
+	ScreenBuffer* renderTargets[2];
+	int currentRenderTargetIndex = 0;
+
+	static Engine* instance;
 };
