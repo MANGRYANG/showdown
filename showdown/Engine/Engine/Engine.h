@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Level/Level.h"
 #include "Math/Vector2.h"
 
 struct KeyState
@@ -9,6 +10,8 @@ struct KeyState
 	bool wasKeyDown = false;
 };
 
+class Level;
+class Actor;
 class ENGINE_API Engine
 {
 public:
@@ -19,6 +22,11 @@ public:
 	void Run();
 	void Shutdown();
 	void SetTargetFrameRate(float targetFrameRate);
+
+	void LoadLevel(Level* newLevel);
+
+	void AddActor(Actor* newActor);
+	void DestroyActor(Actor* targetActor);
 
 protected:
 	// Functions for game loop
@@ -37,6 +45,8 @@ protected:
 	float m_targetFrameRate = 60.0f;
 	float m_targetOneFrameTime = 0.0f;
 	float m_deltaTime;
+
+	Level* mainLevel;
 
 	KeyState keyState[255];
 
