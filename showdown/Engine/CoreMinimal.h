@@ -15,6 +15,23 @@ enum class CursorType
 };
 
 
+enum class Color : unsigned short
+{
+	Red = FOREGROUND_RED,
+	Green = FOREGROUND_GREEN,
+	Blue = FOREGROUND_BLUE,
+	White = Red + Green + Blue,
+};
+
+inline void SetColor(Color color)
+{
+	SetConsoleTextAttribute(
+		GetStdHandle(STD_OUTPUT_HANDLE),
+		(int)color
+	);
+}
+
+
 // Debugging purpose
 #ifdef _DEBUG
 #define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )

@@ -29,6 +29,8 @@ public:
 	void AddActor(Actor* newActor);
 	void DestroyActor(Actor* targetActor);
 
+	void Render(const Vector2& position, const char* image, Color color = Color::White);
+
 	static Engine& Get();
 
 protected:
