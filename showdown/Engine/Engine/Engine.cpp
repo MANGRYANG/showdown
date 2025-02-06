@@ -194,6 +194,16 @@ void Engine::Render()
 	Present();
 }
 
+void Engine::Render(const Vector2& position, const char* image, Color color)
+{
+	for (int ix = 0; ix < (int)strlen(image); ++ix)
+	{
+		int index = (position.ypos * (screenSize.xpos)) + position.xpos + ix;
+		imageBuffer[index].Char.AsciiChar = image[ix];
+		imageBuffer[index].Attributes = (unsigned long)color;
+	}
+}
+
 void Engine::Clear()
 {
 	ClearImageBuffer();
