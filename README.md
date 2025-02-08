@@ -21,12 +21,6 @@ It aims to bring together the strategic depth of Chess and the unique gameplay e
 The game engine for this project is being developed entirely in C++ to ensure optimal performance and full control over game mechanics.<br>
 The CLI-based approach allows for a lightweight and accessible gameplay experience without relying on external graphical libraries.<br>
 
-
-<b>Multiplayer Environment Setup</b>
-
-This game enables real-time communication between players through a socket server, creating a multiplayer environment.<br>
-This allows players on different devices to connect and enjoy the game together.<br>
-
 <br>
 
 # Created By
