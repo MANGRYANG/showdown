@@ -22,6 +22,7 @@ Janggi pieces
 */
 
 GameplayLevel::GameplayLevel()
+    : mousePos{0, 0}, consoleRect{0, 0, 0, 0}, selectedPieceIndex(-1, -1), isChessTurn(true)
 {
     for (int row = 0; row < 9; ++row)
     {
@@ -30,6 +31,8 @@ GameplayLevel::GameplayLevel()
             board[row][col] = -1;
         }
     }
+
+    GetAsyncKeyState(VK_LBUTTON);
 }
 
 GameplayLevel::~GameplayLevel()
@@ -40,8 +43,59 @@ void GameplayLevel::Update(float deltaTime)
 {
     Super::Update(deltaTime);
 
-    if (Engine::Get().GetKeyDown(VK_ESCAPE)) {
+    GetWindowRect(consoleWindow, &consoleRect);
+
+    if (Engine::Get().GetKeyDown(VK_ESCAPE))
+    {
         Engine::Get().Shutdown();
+    }
+
+    if (GetAsyncKeyState(VK_LBUTTON) & 1)
+    {
+        if (GetCursorPos(&mousePos))
+        {
+            int relativeX = mousePos.x - consoleRect.left;
+            int relativeY = mousePos.y - consoleRect.top;
+            int titleBarHeight = 30;
+
+            if (relativeX >= 0 && relativeX < (consoleRect.right - consoleRect.left) &&
+                relativeY >= titleBarHeight && relativeY < (consoleRect.bottom - consoleRect.top))
+            {
+                for (int row = 0; row < 9; ++row)
+                {
+                    for (int col = 0; col < 9; ++col)
+                    {
+                        if (relativeX > ((col * 32 + 14) + 4) && relativeX < (((col + 1) * 32 + 14) - 4))
+                        {
+                            if (relativeY > ((row * 33 + 37) + 3) && relativeY < (((row + 1) * 33 + 37) - 3))
+                            {
+                                selectedPieceIndex.xpos = row;
+                                selectedPieceIndex.ypos = col;
+                                goto OUT_OF_LOOP;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    OUT_OF_LOOP:
+
+    // Chess piece is selected
+    if (isChessTurn &&
+        board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 0 &&
+        board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] <= 6)
+    {
+
+    }
+
+    // Janggi piece is selected
+    else if (!isChessTurn &&
+        board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 7 &&
+        board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] <= 13)
+    {
+
     }
 }
 
