@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Level/Level.h"
-#include <vector>
+#include "Math/Vector2.h"
 
 class GameplayLevel : public Level
 {
@@ -16,5 +16,8 @@ public:
 	virtual void Render() override;
 
 protected:
-	std::vector<std::vector<int>> board;
+	Vector2 BoardPositionToLocation(int xpos, int ypos);
+
+protected:
+	int board[9][9];
 };
