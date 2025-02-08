@@ -31,6 +31,8 @@ public:
 
 	void Render(const Vector2& position, const char* image, Color color = Color::White);
 
+	void SetCursorType(CursorType cursorType);
+
 	static Engine& Get();
 
 protected:

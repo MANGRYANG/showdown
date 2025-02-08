@@ -1,9 +1,14 @@
-#include "Game/Game.h"
+#include "Game/SingleplayGame.h"
 
 void static PrintLine()
 {
     std::cout << "===================================================================\n";
 }
+
+char player_name[1024];
+char guest_name[1024];
+int gamemode_opt = 0;
+int opt = 0;
 
 int main(void)
 {
@@ -24,8 +29,39 @@ int main(void)
 	std::cout << ":: Showdown ::" << "                                              ";
     // White: 15
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-	std::cout << "(v1.0.0)" << std::endl;
+	std::cout << "(v1.0.0)\n" << std::endl;
 
-    Game game;
-    game.Run();
+    SELECT_GAMEMODE:
+    
+    std::cout << "1- Multiplay Mode\n2- Practice Mode\nEnter (1 / 2): ";
+    std::cin >> gamemode_opt;
+
+    if (gamemode_opt == 1)
+    {
+        // TODO : In development..
+        PrintLine();
+        std::cout << "Enter your name: ";
+        std::cin >> player_name;
+        PrintLine();
+        std::cout << "1- Search for players\n2- Invite a player\nEnter (1 / 2): ";
+        std::cin >> opt;
+        PrintLine();
+        std::cout << "Still development..." << std::endl;
+        PrintLine();
+        goto SELECT_GAMEMODE;
+    }
+    else if (gamemode_opt == 2)
+    {
+        SingleplayGame singleplaygame;
+        singleplaygame.Run();
+    }
+    else
+    {
+        PrintLine();
+        std::cout << "Invalid option, please enter a valid option." << std::endl;
+        PrintLine();
+        goto SELECT_GAMEMODE;
+    }
+
+    return 0;
 }

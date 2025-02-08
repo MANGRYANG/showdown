@@ -204,6 +204,11 @@ void Engine::Render(const Vector2& position, const char* image, Color color)
 	}
 }
 
+void Engine::SetCursorType(CursorType cursorType)
+{
+	GetRenderer()->SetCursorType(cursorType);
+}
+
 void Engine::Clear()
 {
 	ClearImageBuffer();

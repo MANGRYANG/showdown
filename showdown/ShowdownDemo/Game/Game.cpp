@@ -2,6 +2,7 @@
 
 Game::Game()
 {
+	SetCursorType(CursorType::NoCursor);
 }
 
 Game::~Game()
