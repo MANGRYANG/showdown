@@ -171,6 +171,21 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor\ChessPiece\Bishop.cpp" />
+    <ClCompile Include="Actor\ChessPiece\Jester.cpp" />
+    <ClCompile Include="Actor\ChessPiece\King.cpp" />
+    <ClCompile Include="Actor\ChessPiece\Knight.cpp" />
+    <ClCompile Include="Actor\ChessPiece\Pawn.cpp" />
+    <ClCompile Include="Actor\ChessPiece\Queen.cpp" />
+    <ClCompile Include="Actor\ChessPiece\Rook.cpp" />
+    <ClCompile Include="Actor\JanggiPiece\Cannon.cpp" />
+    <ClCompile Include="Actor\JanggiPiece\Chariot.cpp" />
+    <ClCompile Include="Actor\JanggiPiece\Elephant.cpp" />
+    <ClCompile Include="Actor\JanggiPiece\Emperor.cpp" />
+    <ClCompile Include="Actor\JanggiPiece\Guard.cpp" />
+    <ClCompile Include="Actor\JanggiPiece\Horse.cpp" />
+    <ClCompile Include="Actor\JanggiPiece\Soldier.cpp" />
+    <ClCompile Include="Actor\Piece.cpp" />
     <ClCompile Include="Game\Game.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Includes\;$(ProjectDir)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Includes\;$(ProjectDir)</AdditionalIncludeDirectories>
@@ -184,6 +199,21 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor\ChessPiece\Bishop.h" />
+    <ClInclude Include="Actor\ChessPiece\Jester.h" />
+    <ClInclude Include="Actor\ChessPiece\King.h" />
+    <ClInclude Include="Actor\ChessPiece\Knight.h" />
+    <ClInclude Include="Actor\ChessPiece\Pawn.h" />
+    <ClInclude Include="Actor\ChessPiece\Queen.h" />
+    <ClInclude Include="Actor\ChessPiece\Rook.h" />
+    <ClInclude Include="Actor\JanggiPiece\Cannon.h" />
+    <ClInclude Include="Actor\JanggiPiece\Chariot.h" />
+    <ClInclude Include="Actor\JanggiPiece\Elephant.h" />
+    <ClInclude Include="Actor\JanggiPiece\Emperor.h" />
+    <ClInclude Include="Actor\JanggiPiece\Guard.h" />
+    <ClInclude Include="Actor\JanggiPiece\Horse.h" />
+    <ClInclude Include="Actor\JanggiPiece\Soldier.h" />
+    <ClInclude Include="Actor\Piece.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\SingleplayGame.h" />
     <ClInclude Include="Level\ChessplayLevel.h" />
