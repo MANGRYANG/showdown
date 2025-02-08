@@ -14,4 +14,7 @@ public:
 
 	virtual void Update(float deltaTime) override;
 	virtual void Render() override;
+
+protected:
+	std::vector<std::vector<int>> board;
 };
