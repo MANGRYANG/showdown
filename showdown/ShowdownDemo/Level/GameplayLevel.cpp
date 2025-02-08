@@ -38,6 +38,11 @@ GameplayLevel::~GameplayLevel()
 
 void GameplayLevel::Update(float deltaTime)
 {
+    Super::Update(deltaTime);
+
+    if (Engine::Get().GetKeyDown(VK_ESCAPE)) {
+        Engine::Get().Shutdown();
+    }
 }
 
 void GameplayLevel::Render()

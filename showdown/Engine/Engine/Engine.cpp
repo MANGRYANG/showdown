@@ -209,6 +209,21 @@ void Engine::SetCursorType(CursorType cursorType)
 	GetRenderer()->SetCursorType(cursorType);
 }
 
+bool Engine::GetKey(int key) const
+{
+	return keyState[key].isKeyDown;
+}
+
+bool Engine::GetKeyDown(int key) const
+{
+	return keyState[key].isKeyDown && !keyState[key].wasKeyDown;
+}
+
+bool Engine::GetKeyUp(int key) const
+{
+	return !keyState[key].isKeyDown && keyState[key].wasKeyDown;
+}
+
 void Engine::Clear()
 {
 	ClearImageBuffer();

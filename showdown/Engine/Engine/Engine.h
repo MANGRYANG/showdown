@@ -33,6 +33,10 @@ public:
 
 	void SetCursorType(CursorType cursorType);
 
+	bool GetKey(int key) const;
+	bool GetKeyDown(int key) const;
+	bool GetKeyUp(int key) const;
+
 	static Engine& Get();
 
 protected:

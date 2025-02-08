@@ -98,6 +98,7 @@ ChessplayLevel::~ChessplayLevel()
 
 void ChessplayLevel::Update(float deltaTime)
 {
+    Super::Update(deltaTime);
 }
 
 void ChessplayLevel::Render()

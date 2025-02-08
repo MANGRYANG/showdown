@@ -98,6 +98,7 @@ JanggiplayLevel::~JanggiplayLevel()
 
 void JanggiplayLevel::Update(float deltaTime)
 {
+    Super::Update(deltaTime);
 }
 
 void JanggiplayLevel::Render()
