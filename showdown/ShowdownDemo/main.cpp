@@ -1,4 +1,6 @@
-#include "Game/SingleplayGame.h"
+﻿#include "Game/SingleplayGame.h"
+#include "Level/ChessplayLevel.h"
+#include "Level/JanggiplayLevel.h"
 
 void static PrintLine()
 {
@@ -38,28 +40,73 @@ int main(void)
 
     if (gamemode_opt == 1)
     {
-        // TODO : In development..
         PrintLine();
+        
         std::cout << "Enter your name: ";
         std::cin >> player_name;
+        
         PrintLine();
+        
         std::cout << "1- Search for players\n2- Invite a player\nEnter (1 / 2): ";
         std::cin >> opt;
+        
         PrintLine();
+
+        // TODO : In development..
         std::cout << "Still development..." << std::endl;
+        
         PrintLine();
+
         goto SELECT_GAMEMODE;
     }
     else if (gamemode_opt == 2)
     {
-        SingleplayGame singleplaygame;
-        singleplaygame.Run();
+        SELECT_SIDE:
+        PrintLine();
+
+        std::cout << "1- Start with chess\n2- Start with janggi\nEnter (1 / 2): ";
+        std::cin >> opt;
+
+        if (opt != 1 && opt != 2)
+        {
+            PrintLine();
+
+            std::cout << "Invalid option, please enter a valid option." << std::endl;
+
+            goto SELECT_SIDE;
+        }
+
+        PrintLine();
+        
+        std::cout << "Configuring the game.." << std::endl;
+        
+        PrintLine();
+        
+        Sleep(1000);
+        
+        SingleplayGame singleplayGame;
+
+        if (opt == 1)
+        {
+            singleplayGame.LoadLevel(new ChessplayLevel());
+        }
+
+        else if (opt == 2)
+        {
+            singleplayGame.LoadLevel(new JanggiplayLevel());
+        }
+
+        singleplayGame.Run();
+
     }
     else
     {
         PrintLine();
+        
         std::cout << "Invalid option, please enter a valid option." << std::endl;
+        
         PrintLine();
+        
         goto SELECT_GAMEMODE;
     }
 

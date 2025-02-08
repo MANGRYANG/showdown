@@ -178,11 +178,17 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Includes\;$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Game\SingleplayGame.cpp" />
+    <ClCompile Include="Level\ChessplayLevel.cpp" />
+    <ClCompile Include="Level\GameplayLevel.cpp" />
+    <ClCompile Include="Level\JanggiplayLevel.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\SingleplayGame.h" />
+    <ClInclude Include="Level\ChessplayLevel.h" />
+    <ClInclude Include="Level\GameplayLevel.h" />
+    <ClInclude Include="Level\JanggiplayLevel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
