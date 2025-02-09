@@ -37,6 +37,8 @@ public:
 	bool GetKeyDown(int key) const;
 	bool GetKeyUp(int key) const;
 
+	void PresentImmediately();
+
 	static Engine& Get();
 
 protected:

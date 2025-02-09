@@ -46,43 +46,43 @@ JanggiplayLevel::JanggiplayLevel()
             case -1:
                 break;
             case 0: // King
-                GameplayLevel::AddActor(new King(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new King(BoardCoordToPosition(col, row)));
                 break;
             case 2: // Rook
-                GameplayLevel::AddActor(new Rook(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Rook(BoardCoordToPosition(col, row)));
                 break;
             case 3: // Bishop
-                GameplayLevel::AddActor(new Bishop(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Bishop(BoardCoordToPosition(col, row)));
                 break;
             case 4: // Knight
-                GameplayLevel::AddActor(new Knight(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Knight(BoardCoordToPosition(col, row)));
                 break;
             case 5: // Pawn
-                GameplayLevel::AddActor(new Pawn(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Pawn(BoardCoordToPosition(col, row)));
                 break;
             case 6: // Jester
-                GameplayLevel::AddActor(new Jester(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Jester(BoardCoordToPosition(col, row)));
                 break;
             case 7: // Emperor
-                GameplayLevel::AddActor(new Emperor(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Emperor(BoardCoordToPosition(col, row)));
                 break;
             case 8: // Cannon
-                GameplayLevel::AddActor(new Cannon(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Cannon(BoardCoordToPosition(col, row)));
                 break;
             case 9: // Elephant
-                GameplayLevel::AddActor(new Elephant(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Elephant(BoardCoordToPosition(col, row)));
                 break;
             case 10: // Horse
-                GameplayLevel::AddActor(new Horse(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Horse(BoardCoordToPosition(col, row)));
                 break;
             case 11: // Chariot
-                GameplayLevel::AddActor(new Chariot(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Chariot(BoardCoordToPosition(col, row)));
                 break;
             case 12: // Soldier
-                GameplayLevel::AddActor(new Soldier(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Soldier(BoardCoordToPosition(col, row)));
                 break;
             case 13: // Guard
-                GameplayLevel::AddActor(new Guard(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Guard(BoardCoordToPosition(col, row)));
                 break;
 
             default:

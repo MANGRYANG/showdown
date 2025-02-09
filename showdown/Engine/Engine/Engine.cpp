@@ -224,6 +224,11 @@ bool Engine::GetKeyUp(int key) const
 	return !keyState[key].isKeyDown && keyState[key].wasKeyDown;
 }
 
+void Engine::PresentImmediately()
+{
+	Present();
+}
+
 void Engine::Clear()
 {
 	ClearImageBuffer();
