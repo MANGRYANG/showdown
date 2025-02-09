@@ -87,7 +87,11 @@ void GameplayLevel::Update(float deltaTime)
         board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 0 &&
         board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] <= 6)
     {
-
+        Piece* tempPiece = dynamic_cast<Piece*>(FindActor(BoardPositionToLocation(selectedPieceIndex.ypos, selectedPieceIndex.xpos)));
+        if (tempPiece != nullptr)
+        {
+            tempPiece->SetColor(Color::Yellow);
+        }
     }
 
     // Janggi piece is selected
@@ -124,6 +128,18 @@ void GameplayLevel::Render()
             Engine::Get().Render(Vector2(28 + ix * 4, i * 2 - 1), "¦¢", Color::White);
         }
     }
+}
+
+Actor* GameplayLevel::FindActor(Vector2 position)
+{
+    for (Actor* actor : actors)
+    {
+        if (actor->Position() == position)
+        {
+            return actor;
+        }
+    }
+    return nullptr;
 }
 
 Vector2 GameplayLevel::BoardPositionToLocation(int xpos, int ypos)
