@@ -17,3 +17,13 @@ void Piece::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
 }
+
+std::vector<std::pair<int, int>> Piece::CatchablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward)
+{
+	return {};
+}
+
+std::vector<std::pair<int, int>> Piece::ReachablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward)
+{
+	return {};
+}

@@ -3,6 +3,7 @@
 #include "Level/Level.h"
 #include "Actor/Actor.h"
 #include "Actor/Piece.h"
+#include "Actor/MovingMark/MovingMark.h"
 #include "Math/Vector2.h"
 
 class GameplayLevel : public Level
@@ -11,7 +12,7 @@ class GameplayLevel : public Level
 	RTTI_DECLARATIONS(GameplayLevel, Level)
 
 public:
-	GameplayLevel();
+	GameplayLevel(bool isForward);
 	~GameplayLevel();
 
 	virtual void Update(float deltaTime) override;
@@ -31,4 +32,5 @@ protected:
 	Vector2 selectedPieceIndex;
 
 	bool isChessTurn;
+	const bool isForward;
 };

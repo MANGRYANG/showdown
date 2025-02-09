@@ -17,6 +17,7 @@
 #include "Actor/JanggiPiece/Guard.h"
 
 JanggiplayLevel::JanggiplayLevel()
+    : GameplayLevel(false)
 {
 	int temp[9][9] = {
 		{2, 4, 3, 6, 0, 6, 4, 3, 2},
