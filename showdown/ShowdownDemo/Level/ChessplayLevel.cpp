@@ -19,14 +19,14 @@
 ChessplayLevel::ChessplayLevel()
     : GameplayLevel(true)
 {
-    int temp[9][9] = {
+        int temp[9][9] = {
         {11, 9, 10, 13, -1, 13, 9, 10, 11},
         {-1, -1, -1, -1, 7, -1, -1, -1, -1},
         {-1, 8, -1, -1, -1, -1, -1, 8, -1},
         {12, -1, 12, -1, 12, -1, 12, -1, 12},
         {-1, -1, -1, -1, -1, -1, -1, -1, -1},
         {-1, -1, -1, -1, -1, -1, -1, -1, -1},
-        {11, -1, 11, -1, 11, -1, -1, -1, -1},
+        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
         {5, 5, 5, 5, 5, 5, 5, 5, 5},
         {2, 4, 3, 6, 0, 6, 4, 3, 2}
     };
@@ -47,6 +47,9 @@ ChessplayLevel::ChessplayLevel()
                 break;
             case 0: // King
                 GameplayLevel::AddActor(new King(BoardPositionToLocation(col, row)));
+                break;
+            case 1: // Queen
+                GameplayLevel::AddActor(new Queen(BoardPositionToLocation(col, row)));
                 break;
             case 2: // Rook
                 GameplayLevel::AddActor(new Rook(BoardPositionToLocation(col, row)));
