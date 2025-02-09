@@ -78,6 +78,9 @@
     <ClCompile Include="Actor\JanggiPiece\Guard.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Actor\MovingMark\MovingMark.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Game.h">
@@ -138,6 +141,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Actor\JanggiPiece\Guard.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor\MovingMark\MovingMark.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

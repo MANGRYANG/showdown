@@ -3,13 +3,13 @@
 #include "Actor/DrawableActor.h"
 #include <vector>
 
-class Piece : public DrawableActor
+class MovingMark : public DrawableActor
 {
-	RTTI_DECLARATIONS(Piece, DrawableActor)
+	RTTI_DECLARATIONS(MovingMark, DrawableActor)
 
 public:
-	Piece(const char* image, Vector2 location);
-	~Piece();
+	MovingMark(Vector2 location);
+	~MovingMark();
 
 	virtual void Update(float deltaTime) override;
 	virtual std::vector<std::pair<int, int>> CatchablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward);
