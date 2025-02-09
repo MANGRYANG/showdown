@@ -8,7 +8,7 @@ class ENGINE_API DrawableActor : public Actor
 	RTTI_DECLARATIONS(DrawableActor, Actor)
 
 public:
-	DrawableActor(const char* image = "");
+	DrawableActor(const char* image, Vector2 position);
 	virtual ~DrawableActor();
 
 	virtual void Draw() override;

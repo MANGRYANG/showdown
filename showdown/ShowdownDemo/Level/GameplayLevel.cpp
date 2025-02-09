@@ -11,7 +11,7 @@
 5: Pawn (P)
 6: Jester (J)
 
-Janggi pieces
+* Janggi pieces
 7: Emperor (\u6F22)
 8: Cannon (\u5305)
 9: Elephant (\u8C61)

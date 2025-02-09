@@ -14,7 +14,7 @@ class ENGINE_API Actor : public RTTI
 	friend class Level;
 
 public:
-	Actor();
+	Actor(Vector2 position);
 	virtual ~Actor();
 
 	// Function for loop processing
