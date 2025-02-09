@@ -3,12 +3,12 @@
 
 #include "CoreMinimal.h"
 
-Actor::Actor()
+Actor::Actor(Vector2 position)
 	: isActive(true), isExpired(false)
 {
 }
 
-Actor::~Actor() 
+Actor::~Actor()
 {
 }
 

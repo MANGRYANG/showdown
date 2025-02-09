@@ -2,14 +2,16 @@
 #include "Engine/Engine.h"
 #include "DrawableActor.h"
 
-DrawableActor::DrawableActor(const char* image)
-	: Actor()
+DrawableActor::DrawableActor(const char* image, Vector2 position)
+	: Actor(position)
 {
 	auto length = strlen(image) + 1;
 	this->image = new char[length];
 	strcpy_s(this->image, length, image);
 
 	width = (int)strlen(image);
+
+	SetPosition(position);
 }
 
 DrawableActor::~DrawableActor()
