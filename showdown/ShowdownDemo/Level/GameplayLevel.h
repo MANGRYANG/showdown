@@ -18,7 +18,6 @@ public:
 	virtual void Render() override;
 
 protected:
-	Actor* FindActor(Vector2 position);
 	Vector2 BoardPositionToLocation(int xpos, int ypos);
 
 protected:

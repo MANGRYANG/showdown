@@ -21,6 +21,8 @@ enum class Color : unsigned short
 	Green = FOREGROUND_GREEN,
 	Blue = FOREGROUND_BLUE,
 	Yellow = Red + Green,
+	Magenta = Red + Blue,
+	Cyan = Green + Blue,
 	White = Red + Green + Blue,
 };
 
