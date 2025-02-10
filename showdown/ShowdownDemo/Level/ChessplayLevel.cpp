@@ -1,21 +1,6 @@
 #include "Engine/Engine.h"
 #include "ChessplayLevel.h"
 
-#include "Actor/ChessPiece/King.h"
-#include "Actor/ChessPiece/Queen.h"
-#include "Actor/ChessPiece/Rook.h"
-#include "Actor/ChessPiece/Bishop.h"
-#include "Actor/ChessPiece/Knight.h"
-#include "Actor/ChessPiece/Pawn.h"
-#include "Actor/ChessPiece/Jester.h"
-#include "Actor/JanggiPiece/Emperor.h"
-#include "Actor/JanggiPiece/Cannon.h"
-#include "Actor/JanggiPiece/Elephant.h"
-#include "Actor/JanggiPiece/Horse.h"
-#include "Actor/JanggiPiece/Chariot.h"
-#include "Actor/JanggiPiece/Soldier.h"
-#include "Actor/JanggiPiece/Guard.h"
-
 ChessplayLevel::ChessplayLevel()
     : GameplayLevel(true)
 {
