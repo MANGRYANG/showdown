@@ -36,7 +36,9 @@ protected:
 	// Row, Column
 	Vector2 selectedPieceIndex;
 
-	//bool isChessTurn;
+	// Chess team always start first
+	bool isChessTurn = true;
+
 	bool isSelected = false;
 	const bool isForward;
 

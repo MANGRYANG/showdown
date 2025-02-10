@@ -79,7 +79,8 @@ void GameplayLevel::Update(float deltaTime)
 
     OUT_OF_LOOP:
         // Chess piece is selected
-        if (board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 0 &&
+        if (isChessTurn &&
+            board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 0 &&
             board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] <= 6)
         {
             if (isSelected)
@@ -161,7 +162,8 @@ void GameplayLevel::Update(float deltaTime)
         }
 
         // Janggi piece is selected
-        if (board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 7 &&
+        if (!isChessTurn &&
+            board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 7 &&
             board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] <= 13)
         {
             if (isSelected)
@@ -265,6 +267,7 @@ void GameplayLevel::Update(float deltaTime)
                                 board[PositionToBoardCoord(startpoint).ypos][PositionToBoardCoord(startpoint).xpos];
 
                             board[PositionToBoardCoord(startpoint).ypos][PositionToBoardCoord(startpoint).xpos] = -1;
+                            isChessTurn = !isChessTurn;
                         }
 
                         for (Actor* temp : actors)
