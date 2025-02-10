@@ -27,6 +27,4 @@ protected:
 	int width = 0;
 
 	Color color = Color::White;
-
-	Vector2 position;
 };

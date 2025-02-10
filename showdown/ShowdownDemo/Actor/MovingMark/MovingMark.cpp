@@ -7,6 +7,9 @@ MovingMark::MovingMark(Vector2 location)
 {
 	this->position.xpos = location.xpos;
 	this->position.ypos = location.ypos;
+
+	this->SetActive(false);
+	this->SetColor(Color::Green);
 }
 
 MovingMark::~MovingMark()

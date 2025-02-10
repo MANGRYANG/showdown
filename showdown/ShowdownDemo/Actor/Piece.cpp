@@ -27,3 +27,8 @@ std::vector<std::pair<int, int>> Piece::ReachablePiecePosition(int board[][9], i
 {
 	return {};
 }
+
+void Piece::SetPosition(const Vector2& newPosition)
+{
+	Super::SetPosition(newPosition);
+}

@@ -19,7 +19,8 @@ public:
 	virtual void Render() override;
 
 protected:
-	Vector2 BoardPositionToLocation(int xpos, int ypos);
+	Vector2 BoardCoordToPosition(int xpos, int ypos);
+	Vector2 PositionToBoardCoord(Vector2 position);
 
 protected:
 	int board[9][9];
@@ -28,9 +29,16 @@ protected:
 	HWND consoleWindow = GetConsoleWindow();
 	RECT consoleRect;
 
+	Piece* currentPiece;
+	std::vector<std::pair<int, int>> catchablePositions;
+	std::vector<std::pair<int, int>> movingMarkPositions;
+
 	// Row, Column
 	Vector2 selectedPieceIndex;
 
-	bool isChessTurn;
+	//bool isChessTurn;
+	bool isSelected = false;
 	const bool isForward;
+
+	void DeactivateMovingMark();
 };

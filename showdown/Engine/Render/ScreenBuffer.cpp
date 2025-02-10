@@ -36,7 +36,7 @@ ScreenBuffer::~ScreenBuffer()
 	CloseHandle(buffer);
 }
 
-void ScreenBuffer::SetCursorType(CursorType cursorType)
+void ScreenBuffer::SetCursorType(CursorType cursorType) const
 {
 	CONSOLE_CURSOR_INFO info = { };
 
@@ -61,14 +61,14 @@ void ScreenBuffer::SetCursorType(CursorType cursorType)
 	SetConsoleCursorInfo(buffer, &info);
 }
 
-void ScreenBuffer::Clear()
+void ScreenBuffer::Clear() const
 {
 	COORD position = { 0, 0 };
 	DWORD writtenCount = 0;
 	FillConsoleOutputCharacter(buffer, ' ', (size.X + 1) * size.Y + 1, position, &writtenCount);
 }
 
-void ScreenBuffer::Draw(CHAR_INFO* charInfo)
+void ScreenBuffer::Draw(CHAR_INFO* charInfo) const
 {
 	COORD bufferPosition = { 0, 0 };
 	COORD bufferSize = { size.X, size.Y };

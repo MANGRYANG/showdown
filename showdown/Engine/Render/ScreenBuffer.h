@@ -13,10 +13,10 @@ public:
 
 	~ScreenBuffer();
 
-	void SetCursorType(CursorType cursorType);
+	void SetCursorType(CursorType cursorType) const;
 
-	void Draw(CHAR_INFO* buffer);
-	void Clear();
+	void Draw(CHAR_INFO* buffer) const;
+	void Clear() const;
 
 
 private:

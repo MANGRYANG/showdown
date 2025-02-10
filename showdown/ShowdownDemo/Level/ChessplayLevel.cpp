@@ -1,21 +1,6 @@
 #include "Engine/Engine.h"
 #include "ChessplayLevel.h"
 
-#include "Actor/ChessPiece/King.h"
-#include "Actor/ChessPiece/Queen.h"
-#include "Actor/ChessPiece/Rook.h"
-#include "Actor/ChessPiece/Bishop.h"
-#include "Actor/ChessPiece/Knight.h"
-#include "Actor/ChessPiece/Pawn.h"
-#include "Actor/ChessPiece/Jester.h"
-#include "Actor/JanggiPiece/Emperor.h"
-#include "Actor/JanggiPiece/Cannon.h"
-#include "Actor/JanggiPiece/Elephant.h"
-#include "Actor/JanggiPiece/Horse.h"
-#include "Actor/JanggiPiece/Chariot.h"
-#include "Actor/JanggiPiece/Soldier.h"
-#include "Actor/JanggiPiece/Guard.h"
-
 ChessplayLevel::ChessplayLevel()
     : GameplayLevel(true)
 {
@@ -44,48 +29,49 @@ ChessplayLevel::ChessplayLevel()
             switch (board[row][col])
             {
             case -1:
+                GameplayLevel::AddActor(new MovingMark(BoardCoordToPosition(col, row)));
                 break;
             case 0: // King
-                GameplayLevel::AddActor(new King(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new King(BoardCoordToPosition(col, row)));
                 break;
             case 1: // Queen
-                GameplayLevel::AddActor(new Queen(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Queen(BoardCoordToPosition(col, row)));
                 break;
             case 2: // Rook
-                GameplayLevel::AddActor(new Rook(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Rook(BoardCoordToPosition(col, row)));
                 break;
             case 3: // Bishop
-                GameplayLevel::AddActor(new Bishop(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Bishop(BoardCoordToPosition(col, row)));
                 break;
             case 4: // Knight
-                GameplayLevel::AddActor(new Knight(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Knight(BoardCoordToPosition(col, row)));
                 break;
             case 5: // Pawn
-                GameplayLevel::AddActor(new Pawn(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Pawn(BoardCoordToPosition(col, row)));
                 break;
             case 6: // Jester
-                GameplayLevel::AddActor(new Jester(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Jester(BoardCoordToPosition(col, row)));
                 break;
             case 7: // Emperor
-                GameplayLevel::AddActor(new Emperor(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Emperor(BoardCoordToPosition(col, row)));
                 break;
             case 8: // Cannon
-                GameplayLevel::AddActor(new Cannon(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Cannon(BoardCoordToPosition(col, row)));
                 break;
             case 9: // Elephant
-                GameplayLevel::AddActor(new Elephant(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Elephant(BoardCoordToPosition(col, row)));
                 break;
             case 10: // Horse
-                GameplayLevel::AddActor(new Horse(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Horse(BoardCoordToPosition(col, row)));
                 break;
             case 11: // Chariot
-                GameplayLevel::AddActor(new Chariot(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Chariot(BoardCoordToPosition(col, row)));
                 break;
             case 12: // Soldier
-                GameplayLevel::AddActor(new Soldier(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Soldier(BoardCoordToPosition(col, row)));
                 break;
             case 13: // Guard
-                GameplayLevel::AddActor(new Guard(BoardPositionToLocation(col, row)));
+                GameplayLevel::AddActor(new Guard(BoardCoordToPosition(col, row)));
                 break;
 
             default:

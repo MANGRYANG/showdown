@@ -81,15 +81,10 @@ void Engine::Run()
 		if (m_deltaTime >= m_targetOneFrameTime)
 		{
 			ProcessInput();
-			if (m_shouldUpdate)
-			{
-				Update(m_deltaTime);
-				Render();
-			}
+			Update(m_deltaTime);
+			Render();
 
 			previousTime = currentTime;
-
-			m_shouldUpdate = true;
 		}
 	}
 }
@@ -222,6 +217,11 @@ bool Engine::GetKeyDown(int key) const
 bool Engine::GetKeyUp(int key) const
 {
 	return !keyState[key].isKeyDown && keyState[key].wasKeyDown;
+}
+
+void Engine::PresentImmediately()
+{
+	Present();
 }
 
 void Engine::Clear()
