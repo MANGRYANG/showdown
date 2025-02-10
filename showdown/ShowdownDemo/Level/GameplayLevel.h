@@ -36,7 +36,9 @@ protected:
 	// Row, Column
 	Vector2 selectedPieceIndex;
 
-	bool isChessTurn;
+	//bool isChessTurn;
 	bool isSelected = false;
 	const bool isForward;
+
+	void DeactiveMovingMark();
 };

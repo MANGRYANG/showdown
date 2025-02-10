@@ -123,3 +123,8 @@ std::vector<std::pair<int, int>> Pawn::ReachablePiecePosition(int board[][9], in
 	
 	return resultList;
 }
+
+void Pawn::SetPosition(const Vector2& newPosition)
+{
+	Super::SetPosition(newPosition);
+}

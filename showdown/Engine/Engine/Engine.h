@@ -60,7 +60,6 @@ protected:
 protected:
 	// Variables for managing the engine
 	bool m_inShutdown = false;
-	bool m_shouldUpdate = true;
 
 	float m_targetFrameRate = 60.0f;
 	float m_targetOneFrameTime = 0.0f;

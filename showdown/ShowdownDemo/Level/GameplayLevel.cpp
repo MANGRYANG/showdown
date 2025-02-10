@@ -26,11 +26,11 @@
 
 GameplayLevel::GameplayLevel(bool isForward)
     : mousePos{0, 0}, consoleRect{0, 0, 0, 0}, selectedPieceIndex(-1, -1),
-    isChessTurn(true), isForward(isForward), currentPiece(nullptr)
+    isForward(isForward), currentPiece(nullptr)
 {
     memset(board, -1, sizeof(board));
 
-    GetAsyncKeyState(VK_LBUTTON);
+    GetAsyncKeyState(VK_LBUTTON & 1);
 }
 
 GameplayLevel::~GameplayLevel()
@@ -48,7 +48,7 @@ void GameplayLevel::Update(float deltaTime)
         Engine::Get().Shutdown();
     }
 
-    if (GetAsyncKeyState(VK_LBUTTON) & 1)
+    if ((GetAsyncKeyState(VK_LBUTTON) & 0x8000))
     {
         if (GetCursorPos(&mousePos))
         {
@@ -78,23 +78,23 @@ void GameplayLevel::Update(float deltaTime)
         }
     }
 
-OUT_OF_LOOP:
+    OUT_OF_LOOP:
     // Chess piece is selected
-    if (isChessTurn &&
-        board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 0 &&
+    if (board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 0 &&
         board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] <= 6)
     {
         if (isSelected)
         {
-            currentPiece->SetColor(Color::White);
-
-            for (Actor* actor : actors)
+            if (currentPiece != nullptr)
             {
-                if (typeid(*actor).name() == typeid(MovingMark).name())
-                {
-                    actor->SetActive(false);
-                }
+                currentPiece->SetColor(Color::White);
+                currentPiece = nullptr;
+                catchablePositions = {};
+                movingMarkPositions = {};
             }
+
+            isSelected = false;
+            DeactivateMovingMark();
         }
         
         Vector2 selectedPosition = BoardCoordToPosition(selectedPieceIndex.ypos, selectedPieceIndex.xpos);
@@ -123,31 +123,35 @@ OUT_OF_LOOP:
                     actor->Position() == BoardCoordToPosition(catchablePosition.second, catchablePosition.first))
                 {
                     catchablePiece = dynamic_cast<Piece*>(actor);
-                    catchablePiece->SetColor(Color::Red);
+                    if (catchablePiece)
+                    {
+                        catchablePiece->SetColor(Color::Red);
+                    }
                 }
             }
         }
 
-        MovingMark* movingMark;
-        for (std::pair<int, int> movingMarkPosition : movingMarkPositions)
+        if (!movingMarkPositions.empty())
         {
-            for (Actor* actor : actors)
+            for (std::pair<int, int> movingMarkPosition : movingMarkPositions)
             {
-                if (actor->Position() == BoardCoordToPosition(movingMarkPosition.second, movingMarkPosition.first))
+                for (Actor* actor : actors)
                 {
-                    movingMark = dynamic_cast<MovingMark*>(actor);
-                    movingMark->SetActive(true);
+                    if (actor->Position() == BoardCoordToPosition(movingMarkPosition.second, movingMarkPosition.first))
+                    {
+                        MovingMark* movingMark = dynamic_cast<MovingMark*>(actor);
+                        movingMark->SetActive(true);
+                    }
                 }
             }
         }
-
     }
 
     // Janggi piece is selected
-    else if (!isChessTurn &&
-        board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 7 &&
+    if (board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 7 &&
         board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] <= 13)
     {
+        
     }
 
     // Select a space that is not piece
@@ -164,46 +168,39 @@ OUT_OF_LOOP:
                     Vector2 destination = BoardCoordToPosition(selectedPieceIndex.ypos, selectedPieceIndex.xpos);
 
                     // Update Board
-                    int x = board[PositionToBoardCoord(startpoint).ypos][PositionToBoardCoord(startpoint).xpos];
-                    board[PositionToBoardCoord(startpoint).ypos][PositionToBoardCoord(startpoint).xpos]
-                        = board[PositionToBoardCoord(destination).ypos][PositionToBoardCoord(destination).xpos];
-                    board[PositionToBoardCoord(destination).ypos][PositionToBoardCoord(destination).xpos] = x;
+                    board[PositionToBoardCoord(destination).ypos][PositionToBoardCoord(destination).xpos] =
+                        board[PositionToBoardCoord(startpoint).ypos][PositionToBoardCoord(startpoint).xpos];
+
+                    board[PositionToBoardCoord(startpoint).ypos][PositionToBoardCoord(startpoint).xpos] = -1;
 
                     currentPiece->SetPosition(destination);
                     currentPiece->SetColor(Color::White);
 
                     for (Actor* temp : actors)
                     {
-                        if (typeid(*temp).name() == typeid(MovingMark).name())
+                        if (typeid(*temp).name() == typeid(MovingMark).name() &&
+                            temp->Position() == destination)
                         {
-                            temp->SetActive(false);
-                            if (temp->Position() == destination)
-                            {
-                                temp->SetPosition(startpoint);
-                            }
+                            temp->SetPosition(startpoint);
                         }
                     }
                 }
                 else
                 {
-                    for (Actor* temp : actors)
-                    {
-                        if (typeid(*temp).name() == typeid(MovingMark).name())
-                        {
-                            temp->SetActive(false);
-                        }
-                    }
                     if (currentPiece != nullptr)
                     {
                         currentPiece->SetColor(Color::White);
                         currentPiece = nullptr;
+                        catchablePositions = {};
+                        movingMarkPositions = {};
                     }
-                    isSelected = false;
                 }
+                
+                isSelected = false;
+                DeactivateMovingMark();
             }
         }
     }
-    Engine::Get().PresentImmediately();
 }
 
 void GameplayLevel::Render()
@@ -241,4 +238,15 @@ Vector2 GameplayLevel::BoardCoordToPosition(int xpos, int ypos)
 Vector2 GameplayLevel::PositionToBoardCoord(Vector2 position)
 {
     return Vector2((position.xpos - 2) / 4, (position.ypos - 1) / 2);
+}
+
+void GameplayLevel::DeactivateMovingMark()
+{
+    for (Actor* actor : actors)
+    {
+        if (typeid(*actor).name() == typeid(MovingMark).name())
+        {
+            actor->SetActive(false);
+        }
+    }
 }

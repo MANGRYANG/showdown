@@ -81,15 +81,10 @@ void Engine::Run()
 		if (m_deltaTime >= m_targetOneFrameTime)
 		{
 			ProcessInput();
-			if (m_shouldUpdate)
-			{
-				Update(m_deltaTime);
-				Render();
-			}
+			Update(m_deltaTime);
+			Render();
 
 			previousTime = currentTime;
-
-			m_shouldUpdate = true;
 		}
 	}
 }
