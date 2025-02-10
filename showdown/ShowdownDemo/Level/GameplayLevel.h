@@ -40,5 +40,5 @@ protected:
 	bool isSelected = false;
 	const bool isForward;
 
-	void DeactiveMovingMark();
+	void DeactivateMovingMark();
 };
