@@ -9,6 +9,14 @@ Text::Text(const char* image, Vector2 location)
 	this->position.ypos = location.ypos;
 }
 
+Text::Text(const char* image, Vector2 location, Color color)
+	: Super(image, location)
+{
+	this->position.xpos = location.xpos;
+	this->position.ypos = location.ypos;
+	this->color = color;
+}
+
 Text::~Text()
 {
 }

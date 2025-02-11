@@ -9,6 +9,7 @@ class Text : public DrawableActor
 
 public:
 	Text(const char* image, Vector2 location);
+	Text(const char* image, Vector2 location, Color color);
 	~Text();
 
 	virtual void Update(float deltaTime) override;
