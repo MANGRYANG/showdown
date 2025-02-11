@@ -1,6 +1,12 @@
 #include "GameplayLevel.h"
 #include "Engine/Engine.h"
-#include "Actor/ChessPiece/Pawn.h"
+#include "Actor/ChessPiece/Queen.h"
+#include "Actor/ChessPiece/Rook.h"
+#include "Actor/ChessPiece/Bishop.h"
+#include "Actor/ChessPiece/Knight.h"
+
+#include <conio.h>
+
 
 /*
 * Chess pieces
@@ -109,6 +115,7 @@ void GameplayLevel::Update(float deltaTime)
                         if (IsThreatenedPiece(selectedBoardCoord))
                         {
                             CatchEnemyPiece(selectedBoardCoord);
+                            Promotion();
                         }
 
                         InitializeBoard();
@@ -124,6 +131,7 @@ void GameplayLevel::Update(float deltaTime)
                         if (IsMarked(selectedBoardCoord))
                         {
                             MovePiece(selectedBoardCoord);
+                            Promotion();
                         }
                     }
 
@@ -289,9 +297,78 @@ void GameplayLevel::CatchEnemyPiece(Vector2 destinationCoord)
             actor->Destroy();
             currentPiece->SetPosition(destinationPosition);
             GameplayLevel::AddActor(new MovingMark(BoardCoordToActorPosition(currentPieceCoord)));
+            GameplayLevel::ProcessAddedAndDestroyedActor();
 
             InitializeBoard();
             isChessTurn = !isChessTurn;
+
+            break;
+        }
+    }
+}
+
+void GameplayLevel::Promotion()
+{
+    InitializeBoard();
+
+    int lastRow;
+
+    if (isForward)
+    {
+        lastRow = 0;
+    }
+    else
+    {
+        lastRow = 8;
+    }
+
+    for (int x = 0; x < 9; ++x)
+    {
+        if (board[lastRow][x] == 5)
+        {
+            // Update board
+            board[lastRow][x] = 1;
+
+            Vector2 tempPawnPiecePosition = BoardCoordToActorPosition(Vector2(lastRow, x));
+
+            for (Actor* actor : actors)
+            {
+                Piece* tempPieceActor = dynamic_cast<Piece*>(actor);
+                if (tempPieceActor != nullptr &&
+                    actor->Position() == tempPawnPiecePosition)
+                {
+                    tempPieceActor->Destroy();
+                    break;
+                }
+            }
+
+        INPUT_PROMOTIONTYPE:
+            switch (_getch())
+            {
+            case 'Q':
+            case 'q':
+                GameplayLevel::AddActor(new Queen(tempPawnPiecePosition));
+                break;
+
+            case 'R':
+            case 'r':
+                GameplayLevel::AddActor(new Rook(tempPawnPiecePosition));
+                break;
+
+            case 'B':
+            case 'b':
+                GameplayLevel::AddActor(new Bishop(tempPawnPiecePosition));
+                break;
+
+            case 'N':
+            case 'n':
+                GameplayLevel::AddActor(new Knight(tempPawnPiecePosition));
+                break;
+            default:
+                goto INPUT_PROMOTIONTYPE;
+            }
+
+            GameplayLevel::ProcessAddedAndDestroyedActor();
 
             break;
         }

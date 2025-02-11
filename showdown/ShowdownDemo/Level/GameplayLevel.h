@@ -28,6 +28,8 @@ protected:
 	void MovePiece(Vector2 destinationCoord);
 	void CatchEnemyPiece(Vector2 destinationCoord);
 
+	void Promotion();
+
 	bool IsMarked(Vector2 targetCoord);
 
 	bool IsThreatenedPiece(Vector2 targetCoord);
