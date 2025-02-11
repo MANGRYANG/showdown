@@ -187,6 +187,7 @@
     <ClCompile Include="Actor\JanggiPiece\Soldier.cpp" />
     <ClCompile Include="Actor\MovingMark\MovingMark.cpp" />
     <ClCompile Include="Actor\Piece.cpp" />
+    <ClCompile Include="Actor\Text\Text.cpp" />
     <ClCompile Include="Game\Game.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Includes\;$(ProjectDir)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Includes\;$(ProjectDir)</AdditionalIncludeDirectories>
@@ -216,6 +217,7 @@
     <ClInclude Include="Actor\JanggiPiece\Soldier.h" />
     <ClInclude Include="Actor\MovingMark\MovingMark.h" />
     <ClInclude Include="Actor\Piece.h" />
+    <ClInclude Include="Actor\Text\Text.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\SingleplayGame.h" />
     <ClInclude Include="Level\ChessplayLevel.h" />

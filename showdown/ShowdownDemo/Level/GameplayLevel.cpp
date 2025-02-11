@@ -4,6 +4,7 @@
 #include "Actor/ChessPiece/Rook.h"
 #include "Actor/ChessPiece/Bishop.h"
 #include "Actor/ChessPiece/Knight.h"
+#include "Actor/Text/Text.h"
 
 #include <conio.h>
 
@@ -37,6 +38,8 @@ GameplayLevel::GameplayLevel(bool isForward)
 {
     memset(board, -1, sizeof(board));
 
+    gameOverMessagePosition = BoardCoordToActorPosition(Vector2(10, 0));
+
     GetAsyncKeyState(VK_LBUTTON & 1);
 }
 
@@ -50,96 +53,134 @@ void GameplayLevel::Update(float deltaTime)
 
     GetWindowRect(consoleWindow, &consoleRect);
 
+    // Game is over
+    if (!isLevelStopped)
+    {
+        if(!IsGameOver())
+        {
+            if (GetAsyncKeyState(VK_LBUTTON) & 1)
+            {
+                if (GetCursorPos(&mousePos))
+                {
+                    int relativeX = mousePos.x - consoleRect.left;
+                    int relativeY = mousePos.y - consoleRect.top;
+                    int titleBarHeight = 30;
+
+                    if (relativeX >= 0 && relativeX < (consoleRect.right - consoleRect.left) &&
+                        relativeY >= titleBarHeight && relativeY < (consoleRect.bottom - consoleRect.top))
+                    {
+                        for (int row = 0; row < 9; ++row)
+                        {
+                            for (int col = 0; col < 9; ++col)
+                            {
+                                if (relativeX > ((col * 32 + 14) + 4) && relativeX < (((col + 1) * 32 + 14) - 4))
+                                {
+                                    if (relativeY > ((row * 33 + 37) + 3) && relativeY < (((row + 1) * 33 + 37) - 3))
+                                    {
+                                        selectedBoardCoord.xpos = row;
+                                        selectedBoardCoord.ypos = col;
+                                        goto OUT_OF_LOOP;
+                                    }
+                                }
+                            }
+                        }
+
+                    OUT_OF_LOOP:
+
+                        // Case with piece selected during own turn
+                        if ((isChessTurn &&
+                            board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 0 &&
+                            board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 6) ||
+                            (!isChessTurn &&
+                                board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 7 &&
+                                board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 13))
+                        {
+                            if (isSelected)
+                            {
+                                InitializeBoard();
+                            }
+                            SelectPiece(selectedBoardCoord);
+                            ShowReachableWays();
+                            HighlightCatchableEnemies();
+                        }
+
+                        // Case with piece selected during other's turn
+                        else if ((isChessTurn &&
+                            board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 7 &&
+                            board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 13) ||
+                            (!isChessTurn &&
+                                board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 0 &&
+                                board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 6))
+                        {
+                            if (isSelected)
+                            {
+                                // Can be catch enemy piece at selected position
+                                if (IsThreatenedPiece(selectedBoardCoord))
+                                {
+                                    CatchEnemyPiece(selectedBoardCoord);
+                                    Promotion();
+                                }
+
+                                InitializeBoard();
+                            }
+                        }
+
+                        // Case without Piece selected
+                        else
+                        {
+                            if (isSelected)
+                            {
+                                // Can be moved to the selected position
+                                if (IsMarked(selectedBoardCoord))
+                                {
+                                    MovePiece(selectedBoardCoord);
+                                    Promotion();
+                                }
+                            }
+
+                            InitializeBoard();
+                        }
+                    }
+                }
+            }
+        }
+
+        if (IsGameOver())
+        {
+            isLevelStopped = true;
+
+            GameplayLevel::AddActor(new Text("< GAME OVER >", gameOverMessagePosition));
+
+            GameplayLevel::AddActor(new Text("Winner: ", TextLinePositionSetting(1, gameOverMessagePosition)));
+
+            if (isChessWin)
+            {
+                GameplayLevel::AddActor(new Text("KINGDOM",
+                    Vector2(TextLinePositionSetting(1, gameOverMessagePosition).xpos + 8,
+                        TextLinePositionSetting(1, gameOverMessagePosition).ypos), Color::Cyan));
+            }
+            else
+            {
+                GameplayLevel::AddActor(new Text("EMPIRE",
+                    Vector2(TextLinePositionSetting(1, gameOverMessagePosition).xpos + 8, 
+                        TextLinePositionSetting(1, gameOverMessagePosition).ypos), Color::Magenta));
+            }
+
+            GameplayLevel::AddActor(new Text("Team",
+                Vector2(TextLinePositionSetting(1, gameOverMessagePosition).xpos + 16,
+                    TextLinePositionSetting(1, gameOverMessagePosition).ypos)));
+
+            GameplayLevel::ProcessAddedAndDestroyedActor();
+        }
+
+    }
+    
     if (Engine::Get().GetKeyDown(VK_ESCAPE))
     {
         Engine::Get().Shutdown();
     }
 
-    if (GetAsyncKeyState(VK_LBUTTON) & 1)
-    {
-        if (GetCursorPos(&mousePos))
-        {
-            int relativeX = mousePos.x - consoleRect.left;
-            int relativeY = mousePos.y - consoleRect.top;
-            int titleBarHeight = 30;
-
-            if (relativeX >= 0 && relativeX < (consoleRect.right - consoleRect.left) &&
-                relativeY >= titleBarHeight && relativeY < (consoleRect.bottom - consoleRect.top))
-            {
-                for (int row = 0; row < 9; ++row)
-                {
-                    for (int col = 0; col < 9; ++col)
-                    {
-                        if (relativeX > ((col * 32 + 14) + 4) && relativeX < (((col + 1) * 32 + 14) - 4))
-                        {
-                            if (relativeY > ((row * 33 + 37) + 3) && relativeY < (((row + 1) * 33 + 37) - 3))
-                            {
-                                selectedBoardCoord.xpos = row;
-                                selectedBoardCoord.ypos = col;
-                                goto OUT_OF_LOOP;
-                            }
-                        }
-                    }
-                }
-
-                OUT_OF_LOOP:
-
-                // Case with piece selected during own turn
-                if ((isChessTurn &&
-                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 0 &&
-                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 6) ||
-                    (!isChessTurn &&
-                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 7 &&
-                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 13))
-                {
-                    if (isSelected)
-                    {
-                        InitializeBoard();
-                    }
-                    SelectPiece(selectedBoardCoord);
-                    ShowReachableWays();
-                    HighlightCatchableEnemies();
-                }
-
-                // Case with piece selected during other's turn
-                else if ((isChessTurn &&
-                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 7 &&
-                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 13) ||
-                    (!isChessTurn &&
-                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 0 &&
-                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 6))
-                {
-                    if (isSelected)
-                    {
-                        // Can be catch enemy piece at selected position
-                        if (IsThreatenedPiece(selectedBoardCoord))
-                        {
-                            CatchEnemyPiece(selectedBoardCoord);
-                            Promotion();
-                        }
-
-                        InitializeBoard();
-                    }
-                }
-
-                // Case without Piece selected
-                else
-                {
-                    if (isSelected)
-                    {
-                        // Can be moved to the selected position
-                        if (IsMarked(selectedBoardCoord))
-                        {
-                            MovePiece(selectedBoardCoord);
-                            Promotion();
-                        }
-                    }
-
-                    InitializeBoard();
-                }
-            }
-        }
-    }
+    
 }
 
 void GameplayLevel::Render()
@@ -414,6 +455,34 @@ bool GameplayLevel::IsThreatenedPiece(Vector2 targetCoord)
     return false;
 }
 
+bool GameplayLevel::IsGameOver()
+{
+    isChessWin = true;
+    isJanggiWin = true;
+
+    for (int row = 0; row < 9; ++row)
+    {
+        for (int col = 0; col < 9; ++col)
+        {
+            if (board[row][col] == 0)
+            {
+                isJanggiWin = false;
+            }
+            if (board[row][col] == 7)
+            {
+                isChessWin = false;
+            }
+        }
+    }
+
+    if (isChessWin || isJanggiWin)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 Vector2 GameplayLevel::BoardCoordToActorPosition(Vector2 boardCoord)
 {
     return Vector2((boardCoord.ypos * 4) + 2, (boardCoord.xpos * 2) + 1);
@@ -422,4 +491,12 @@ Vector2 GameplayLevel::BoardCoordToActorPosition(Vector2 boardCoord)
 Vector2 GameplayLevel::ActorPositionToBoardCoord(Vector2 actorPosition)
 {
     return Vector2((actorPosition.ypos - 1) / 2, (actorPosition.xpos - 2) / 4);
+}
+
+Vector2 GameplayLevel::TextLinePositionSetting(int line, Vector2 startPosition)
+{
+    Vector2 result = startPosition;
+    result.ypos += (line * 2);
+
+    return result;
 }

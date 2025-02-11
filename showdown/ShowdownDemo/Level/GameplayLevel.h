@@ -34,8 +34,12 @@ protected:
 
 	bool IsThreatenedPiece(Vector2 targetCoord);
 
+	bool IsGameOver();
+
 	Vector2 BoardCoordToActorPosition(Vector2 boardCoord);
 	Vector2 ActorPositionToBoardCoord(Vector2 actorPosition);
+
+	Vector2 TextLinePositionSetting(int line, Vector2 startPosition);
 
 protected:
 	int board[9][9];
@@ -51,9 +55,15 @@ protected:
 	// Row, Column
 	Vector2 selectedBoardCoord;
 
+	Vector2 gameOverMessagePosition;
+
 	// Chess team always start first
 	bool isChessTurn = true;
 	bool isSelected = false;
 	const bool isForward;
+	
+	bool isChessWin = false;
+	bool isJanggiWin = false;
 
+	bool isLevelStopped = false;
 };
