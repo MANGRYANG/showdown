@@ -91,7 +91,7 @@ std::vector<Vector2> Chariot::ReachablePieceCoord(int board[][9], Vector2 select
         }
 
         if (secondRow >= 0 && secondRow <= 2 && secondCol >= 3 && secondCol <= 5) {
-            if ((selectedCoord.xpos - selectedCoord.xpos) == -3 && board[1][4] == -1 && board[secondRow][secondCol] == -1) {
+            if ((selectedCoord.xpos - selectedCoord.ypos) == -3 && board[1][4] == -1 && board[secondRow][secondCol] == -1) {
                 resultList.emplace_back(secondRow, secondCol);
             }
         }

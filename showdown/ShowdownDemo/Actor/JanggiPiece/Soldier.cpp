@@ -47,7 +47,7 @@ std::vector<Vector2> Soldier::CatchablePieceCoord(int board[][9], Vector2 select
 		board[selectedCoord.xpos][selectedCoord.ypos + 1] >= 0 &&
 		board[selectedCoord.xpos][selectedCoord.ypos + 1] <= 6)
 	{
-		resultList.push_back(Vector2(selectedCoord.xpos, selectedCoord.xpos + 1));
+		resultList.push_back(Vector2(selectedCoord.xpos, selectedCoord.ypos + 1));
 	}
 
 	return resultList;

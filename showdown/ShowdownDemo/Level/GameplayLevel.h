@@ -19,6 +19,19 @@ public:
 	virtual void Render() override;
 
 protected:
+	void InitializeBoard();
+
+	void SelectPiece(Vector2 targetCoord);
+	void ShowReachableWays();
+	void HighlightCatchableEnemies();
+
+	void MovePiece(Vector2 destinationCoord);
+	void CatchEnemyPiece(Vector2 destinationCoord);
+
+	bool IsMarked(Vector2 targetCoord);
+
+	bool IsThreatenedPiece(Vector2 targetCoord);
+
 	Vector2 BoardCoordToActorPosition(Vector2 boardCoord);
 	Vector2 ActorPositionToBoardCoord(Vector2 actorPosition);
 
@@ -38,26 +51,7 @@ protected:
 
 	// Chess team always start first
 	bool isChessTurn = true;
-
 	bool isSelected = false;
 	const bool isForward;
 
-	bool shoulUpdate = true;
-
-	void InitializeBoard();
-
-	void SelectPiece(Vector2 targetCoord);
-	void ShowReachableWays();
-	void HighlightCatchableEnemies();
-
-	void MovePiece(Vector2 destinationCoord);
-	void CatchEnemyPiece(Vector2 destinationCoord);
-
-	void DeactivateMovingMark();
-
-	bool IsMarked(Vector2 targetCoord);
-
-	bool IsThreatenedPiece(Vector2 targetCoord);
-
-	int count = 0;
 };

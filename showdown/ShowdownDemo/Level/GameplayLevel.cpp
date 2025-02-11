@@ -298,17 +298,6 @@ void GameplayLevel::CatchEnemyPiece(Vector2 destinationCoord)
     }
 }
 
-void GameplayLevel::DeactivateMovingMark()
-{
-    for (Actor* actor : actors)
-    {
-        if (typeid(*actor).name() == typeid(MovingMark).name())
-        {
-            actor->SetActive(false);
-        }
-    }
-}
-
 bool GameplayLevel::IsMarked(Vector2 targetCoord)
 {
     Vector2 consolePosition = BoardCoordToActorPosition(targetCoord);

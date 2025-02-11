@@ -74,7 +74,7 @@ std::vector<Vector2> Pawn::CatchablePieceCoord(int board[][9], Vector2 selectedC
 			if (board[selectedCoord.xpos + 1][selectedCoord.ypos + 1] >= 7 &&
 				board[selectedCoord.xpos + 1][selectedCoord.ypos + 1] <= 13)
 			{
-				resultList.push_back(Vector2(selectedCoord.xpos + 1, selectedCoord.xpos + 1));
+				resultList.push_back(Vector2(selectedCoord.xpos + 1, selectedCoord.ypos + 1));
 			}
 
 			if (board[selectedCoord.xpos + 1][selectedCoord.ypos - 1] >= 7 &&
