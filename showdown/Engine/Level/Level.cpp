@@ -61,15 +61,22 @@ void Level::Update(float deltaTime)
 
 void Level::Render()
 {
+	int idx = 0;
 	// Call the Draw function while traversing the actors included in the level
 	for (Actor* actor : actors)
 	{
 		// Skip if the actor is inactive or requested to be deleted
-		if (!actor->isActive || actor->isExpired)
+		if (actor->isExpired)
 		{
+			actors.Erase(idx);
+		}
+		if (!actor->isActive)
+		{
+			++idx;
 			continue;
 		}
 
 		actor->Draw();
+		++idx;
 	}
 }

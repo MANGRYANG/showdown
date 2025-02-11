@@ -12,12 +12,12 @@ Queen::~Queen()
 {
 }
 
-std::vector<std::pair<int, int>> Queen::CatchablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward) {
-    std::vector<std::pair<int, int>> resultList;
+std::vector<Vector2> Queen::CatchablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward) {
+    std::vector<Vector2> resultList;
 
     for (const auto& direction : directions) {
-        int currentRow = selectedRow;
-        int currentCol = selectedCol;
+        int currentRow = selectedCoord.xpos;
+        int currentCol = selectedCoord.ypos;
 
         while (true) {
             currentRow += direction[0];
@@ -28,7 +28,7 @@ std::vector<std::pair<int, int>> Queen::CatchablePiecePosition(int board[][9], i
             }
 
             if (board[currentRow][currentCol] >= 7 && board[currentRow][currentCol] <= 13) {
-                resultList.push_back(std::pair<int, int>(currentRow, currentCol));
+                resultList.push_back(Vector2(currentRow, currentCol));
                 break;
             }
             else if (board[currentRow][currentCol] >= 0 && board[currentRow][currentCol] <= 6) {
@@ -40,12 +40,12 @@ std::vector<std::pair<int, int>> Queen::CatchablePiecePosition(int board[][9], i
     return resultList;
 }
 
-std::vector<std::pair<int, int>> Queen::ReachablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward) {
-    std::vector<std::pair<int, int>> resultList;
+std::vector<Vector2> Queen::ReachablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward) {
+    std::vector<Vector2> resultList;
 
     for (const auto& direction : directions) {
-        int currentRow = selectedRow;
-        int currentCol = selectedCol;
+        int currentRow = selectedCoord.xpos;
+        int currentCol = selectedCoord.ypos;
 
         while (true) {
             currentRow += direction[0];
@@ -56,7 +56,7 @@ std::vector<std::pair<int, int>> Queen::ReachablePiecePosition(int board[][9], i
             }
 
             if (board[currentRow][currentCol] == -1) {
-                resultList.push_back(std::pair<int, int>(currentRow, currentCol));
+                resultList.push_back(Vector2(currentRow, currentCol));
             }
             else
             {

@@ -18,12 +18,12 @@ void Piece::Update(float deltaTime)
 	Super::Update(deltaTime);
 }
 
-std::vector<std::pair<int, int>> Piece::CatchablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward)
+std::vector<Vector2> Piece::CatchablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward)
 {
 	return {};
 }
 
-std::vector<std::pair<int, int>> Piece::ReachablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward)
+std::vector<Vector2> Piece::ReachablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward)
 {
 	return {};
 }
@@ -31,4 +31,9 @@ std::vector<std::pair<int, int>> Piece::ReachablePiecePosition(int board[][9], i
 void Piece::SetPosition(const Vector2& newPosition)
 {
 	Super::SetPosition(newPosition);
+}
+
+void Piece::SetColor(Color color)
+{
+	Super::SetColor(color);
 }

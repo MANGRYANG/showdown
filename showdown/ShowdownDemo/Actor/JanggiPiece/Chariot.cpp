@@ -12,11 +12,11 @@ Chariot::~Chariot()
 {
 }
 
-std::vector<std::pair<int, int>> Chariot::CatchablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward) {
-    std::vector<std::pair<int, int>> resultList;
+std::vector<Vector2> Chariot::CatchablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward) {
+    std::vector<Vector2> resultList;
 
     for (const auto& direction : directions) {
-        int currentRow = selectedRow, currentCol = selectedCol;
+        int currentRow = selectedCoord.xpos, currentCol = selectedCoord.ypos;
         while (true) {
             currentRow += direction[0];
             currentCol += direction[1];
@@ -34,11 +34,11 @@ std::vector<std::pair<int, int>> Chariot::CatchablePiecePosition(int board[][9],
     }
 
     for (const auto& dir : innerDiagonalDirections) {
-        int firstRow = selectedRow + dir[0], firstCol = selectedCol + dir[1];
+        int firstRow = selectedCoord.xpos + dir[0], firstCol = selectedCoord.ypos + dir[1];
         int secondRow = firstRow + dir[0], secondCol = firstCol + dir[1];
 
         if (firstRow >= 0 && firstRow <= 2 && firstCol >= 3 && firstCol <= 5) {
-            if ((selectedRow - selectedCol) == -3 || selectedRow + selectedCol == 5) {
+            if ((selectedCoord.xpos - selectedCoord.ypos) == -3 || selectedCoord.xpos + selectedCoord.ypos == 5) {
                 if (board[firstRow][firstCol] >= 0 && board[firstRow][firstCol] <= 6) {
                     resultList.emplace_back(firstRow, firstCol);
                 }
@@ -46,8 +46,8 @@ std::vector<std::pair<int, int>> Chariot::CatchablePiecePosition(int board[][9],
         }
 
         if (secondRow >= 0 && secondRow <= 2 && secondCol >= 3 && secondCol <= 5) {
-            if (((selectedRow - selectedCol) == -3 || selectedRow + selectedCol == 5) &&
-                (selectedRow != 1 || selectedCol != 4)) {
+            if (((selectedCoord.xpos - selectedCoord.ypos) == -3 || selectedCoord.xpos + selectedCoord.ypos == 5) &&
+                (selectedCoord.xpos != 1 || selectedCoord.ypos != 4)) {
                 if (board[1][4] == -1 && board[secondRow][secondCol] >= 0 && board[secondRow][secondCol] <= 6) {
                     resultList.emplace_back(secondRow, secondCol);
                 }
@@ -60,11 +60,11 @@ std::vector<std::pair<int, int>> Chariot::CatchablePiecePosition(int board[][9],
     return resultList;
 }
 
-std::vector<std::pair<int, int>> Chariot::ReachablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward) {
-    std::vector<std::pair<int, int>> resultList;
+std::vector<Vector2> Chariot::ReachablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward) {
+    std::vector<Vector2> resultList;
 
     for (const auto& direction : directions) {
-        int currentRow = selectedRow, currentCol = selectedCol;
+        int currentRow = selectedCoord.xpos, currentCol = selectedCoord.ypos;
         while (true) {
             currentRow += direction[0];
             currentCol += direction[1];
@@ -79,11 +79,11 @@ std::vector<std::pair<int, int>> Chariot::ReachablePiecePosition(int board[][9],
     }
 
     for (const auto& dir : innerDiagonalDirections) {
-        int firstRow = selectedRow + dir[0], firstCol = selectedCol + dir[1];
+        int firstRow = selectedCoord.xpos + dir[0], firstCol = selectedCoord.ypos + dir[1];
         int secondRow = firstRow + dir[0], secondCol = firstCol + dir[1];
 
         if (firstRow >= 0 && firstRow <= 2 && firstCol >= 3 && firstCol <= 5) {
-            if ((selectedRow - selectedCol) == -3 || selectedRow + selectedCol == 5) {
+            if ((selectedCoord.xpos - selectedCoord.ypos) == -3 || selectedCoord.xpos + selectedCoord.ypos == 5) {
                 if (board[firstRow][firstCol] == -1) {
                     resultList.emplace_back(firstRow, firstCol);
                 }
@@ -91,7 +91,7 @@ std::vector<std::pair<int, int>> Chariot::ReachablePiecePosition(int board[][9],
         }
 
         if (secondRow >= 0 && secondRow <= 2 && secondCol >= 3 && secondCol <= 5) {
-            if ((selectedRow - selectedCol) == -3 && board[1][4] == -1 && board[secondRow][secondCol] == -1) {
+            if ((selectedCoord.xpos - selectedCoord.xpos) == -3 && board[1][4] == -1 && board[secondRow][secondCol] == -1) {
                 resultList.emplace_back(secondRow, secondCol);
             }
         }
