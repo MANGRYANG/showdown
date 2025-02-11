@@ -19,8 +19,8 @@ public:
 	virtual void Render() override;
 
 protected:
-	Vector2 BoardCoordToPosition(int xpos, int ypos);
-	Vector2 PositionToBoardCoord(Vector2 position);
+	Vector2 BoardCoordToActorPosition(Vector2 boardCoord);
+	Vector2 ActorPositionToBoardCoord(Vector2 actorPosition);
 
 protected:
 	int board[9][9];
@@ -30,11 +30,11 @@ protected:
 	RECT consoleRect;
 
 	Piece* currentPiece;
-	std::vector<std::pair<int, int>> catchablePositions;
-	std::vector<std::pair<int, int>> movingMarkPositions;
+	std::vector<Vector2> catchablePieceCoords;
+	std::vector<Vector2> reachablePieceCoords;
 
 	// Row, Column
-	Vector2 selectedPieceIndex;
+	Vector2 selectedBoardCoord;
 
 	// Chess team always start first
 	bool isChessTurn = true;
@@ -42,5 +42,22 @@ protected:
 	bool isSelected = false;
 	const bool isForward;
 
+	bool shoulUpdate = true;
+
+	void InitializeBoard();
+
+	void SelectPiece(Vector2 targetCoord);
+	void ShowReachableWays();
+	void HighlightCatchableEnemies();
+
+	void MovePiece(Vector2 destinationCoord);
+	void CatchEnemyPiece(Vector2 destinationCoord);
+
 	void DeactivateMovingMark();
+
+	bool IsMarked(Vector2 targetCoord);
+
+	bool IsThreatenedPiece(Vector2 targetCoord);
+
+	int count = 0;
 };

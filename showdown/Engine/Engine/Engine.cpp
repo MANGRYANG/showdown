@@ -4,7 +4,7 @@
 
 #include <conio.h>
 
-BOOL WINAPI MessageProcessor(DWORD message)
+static BOOL WINAPI MessageProcessor(DWORD message)
 {
 	switch (message)
 	{

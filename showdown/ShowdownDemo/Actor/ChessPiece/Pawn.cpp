@@ -12,77 +12,75 @@ Pawn::~Pawn()
 {
 }
 
-std::vector<std::pair<int, int>> Pawn::CatchablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward)
+std::vector<Vector2> Pawn::CatchablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward)
 {
-	std::vector<std::pair<int, int>> resultList = {};
+	std::vector<Vector2> resultList = {};
 
-	// Chess side
 	if (isForward)
 	{
-		if (selectedCol == 0)
+		if (selectedCoord.ypos == 0)
 		{
-			if (board[selectedRow - 1][selectedCol + 1] >= 7 &&
-				board[selectedRow - 1][selectedCol + 1] <= 13)
+			if (board[selectedCoord.xpos - 1][selectedCoord.ypos + 1] >= 7 &&
+				board[selectedCoord.xpos - 1][selectedCoord.ypos + 1] <= 13)
 			{
-				resultList.push_back(std::pair<int, int> (selectedRow - 1, selectedCol + 1));
+				resultList.push_back(Vector2(selectedCoord.xpos - 1, selectedCoord.ypos + 1));
 			}
 		}
-		else if (selectedCol == 8)
+		else if (selectedCoord.ypos == 8)
 		{
-			if (board[selectedRow - 1][selectedCol - 1] >= 7 &&
-				board[selectedRow - 1][selectedCol - 1] <= 13)
+			if (board[selectedCoord.xpos - 1][selectedCoord.ypos - 1] >= 7 &&
+				board[selectedCoord.xpos - 1][selectedCoord.ypos - 1] <= 13)
 			{
-				resultList.push_back(std::pair<int, int>(selectedRow - 1, selectedCol - 1));
+				resultList.push_back(Vector2(selectedCoord.xpos - 1, selectedCoord.ypos - 1));
 			}
 		}
 		else
 		{
-			if (board[selectedRow - 1][selectedCol + 1] >= 7 &&
-				board[selectedRow - 1][selectedCol + 1] <= 13)
+			if (board[selectedCoord.xpos - 1][selectedCoord.ypos + 1] >= 7 &&
+				board[selectedCoord.xpos - 1][selectedCoord.ypos + 1] <= 13)
 			{
-				resultList.push_back(std::pair<int, int>(selectedRow - 1, selectedCol + 1));
+				resultList.push_back(Vector2(selectedCoord.xpos - 1, selectedCoord.ypos + 1));
 			}
 
-			if (board[selectedRow - 1][selectedCol - 1] >= 7 &&
-				board[selectedRow - 1][selectedCol - 1] <= 13)
+			if (board[selectedCoord.xpos - 1][selectedCoord.ypos - 1] >= 7 &&
+				board[selectedCoord.xpos - 1][selectedCoord.ypos - 1] <= 13)
 			{
-				resultList.push_back(std::pair<int, int>(selectedRow - 1, selectedCol - 1));
+				resultList.push_back(Vector2(selectedCoord.xpos - 1, selectedCoord.ypos - 1));
 			}
 		}
 		
 	}
 
-	// Janggi side
 	else
 	{
-		if (selectedCol == 0)
+		if (selectedCoord.ypos == 0)
 		{
-			if (board[selectedRow + 1][selectedCol + 1] >= 7 &&
-				board[selectedRow + 1][selectedCol + 1] <= 13)
+			if (board[selectedCoord.xpos + 1][selectedCoord.ypos + 1] >= 7 &&
+				board[selectedCoord.xpos + 1][selectedCoord.ypos + 1] <= 13)
 			{
-				resultList.push_back(std::pair<int, int>(selectedRow + 1, selectedCol + 1));
+				resultList.push_back(Vector2(selectedCoord.xpos + 1, selectedCoord.ypos + 1));
 			}
 		}
-		else if (selectedCol == 8)
+		else if (selectedCoord.ypos == 8)
 		{
-			if (board[selectedRow + 1][selectedCol - 1] >= 7 &&
-				board[selectedRow + 1][selectedCol - 1] <= 13)
+			if (board[selectedCoord.xpos + 1][selectedCoord.ypos - 1] >= 7 &&
+				board[selectedCoord.xpos + 1][selectedCoord.ypos - 1] <= 13)
 			{
-				resultList.push_back(std::pair<int, int>(selectedRow + 1, selectedCol - 1));
+				resultList.push_back(Vector2(selectedCoord.xpos + 1, selectedCoord.ypos - 1));
 			}
 		}
 		else
 		{
-			if (board[selectedRow + 1][selectedCol + 1] >= 7 &&
-				board[selectedRow + 1][selectedCol + 1] <= 13)
+			if (board[selectedCoord.xpos + 1][selectedCoord.ypos + 1] >= 7 &&
+				board[selectedCoord.xpos + 1][selectedCoord.ypos + 1] <= 13)
 			{
-				resultList.push_back(std::pair<int, int>(selectedRow + 1, selectedCol + 1));
+				resultList.push_back(Vector2(selectedCoord.xpos + 1, selectedCoord.xpos + 1));
 			}
 
-			if (board[selectedRow + 1][selectedCol - 1] >= 7 &&
-				board[selectedRow + 1][selectedCol - 1] <= 13)
+			if (board[selectedCoord.xpos + 1][selectedCoord.ypos - 1] >= 7 &&
+				board[selectedCoord.xpos + 1][selectedCoord.ypos - 1] <= 13)
 			{
-				resultList.push_back(std::pair<int, int>(selectedRow + 1, selectedCol - 1));
+				resultList.push_back(Vector2(selectedCoord.xpos + 1, selectedCoord.ypos - 1));
 			}
 		}
 
@@ -91,32 +89,32 @@ std::vector<std::pair<int, int>> Pawn::CatchablePiecePosition(int board[][9], in
 	return resultList;
 }
 
-std::vector<std::pair<int, int>> Pawn::ReachablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward)
+std::vector<Vector2> Pawn::ReachablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward)
 {
-	std::vector<std::pair<int, int>> resultList = {};
+	std::vector<Vector2> resultList = {};
 
 	if (isForward)
 	{
-		if (board[selectedRow - 1][selectedCol] == -1)
+		if (board[selectedCoord.xpos - 1][selectedCoord.ypos] == -1)
 		{
-			resultList.push_back(std::pair<int, int>(selectedRow - 1, selectedCol));
+			resultList.push_back(Vector2(selectedCoord.xpos - 1, selectedCoord.ypos));
 
-			if (selectedRow == 7 && board[selectedRow - 2][selectedCol] == -1)
+			if (selectedCoord.xpos == 7 && board[selectedCoord.xpos - 2][selectedCoord.ypos] == -1)
 			{
-				resultList.push_back(std::pair<int, int>(selectedRow - 2, selectedCol));
+				resultList.push_back(Vector2(selectedCoord.xpos - 2, selectedCoord.ypos));
 			}
 		}
 	}
 	
 	else
 	{
-		if (board[selectedRow + 1][selectedCol] == -1)
+		if (board[selectedCoord.xpos + 1][selectedCoord.ypos] == -1)
 		{
-			resultList.push_back(std::pair<int, int>(selectedRow + 1, selectedCol));
+			resultList.push_back(Vector2(selectedCoord.xpos + 1, selectedCoord.ypos));
 
-			if (selectedRow == 1 && board[selectedRow + 2][selectedCol] == -1)
+			if (selectedCoord.xpos == 1 && board[selectedCoord.xpos + 2][selectedCoord.ypos] == -1)
 			{
-				resultList.push_back(std::pair<int, int>(selectedRow + 2, selectedCol));
+				resultList.push_back(Vector2(selectedCoord.xpos + 2, selectedCoord.ypos));
 			}
 		}
 	}

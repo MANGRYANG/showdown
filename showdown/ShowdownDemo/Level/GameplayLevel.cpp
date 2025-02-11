@@ -1,5 +1,6 @@
 #include "GameplayLevel.h"
 #include "Engine/Engine.h"
+#include "Actor/ChessPiece/Pawn.h"
 
 /*
 * Chess pieces
@@ -25,7 +26,7 @@
 */
 
 GameplayLevel::GameplayLevel(bool isForward)
-    : mousePos{0, 0}, consoleRect{0, 0, 0, 0}, selectedPieceIndex(-1, -1),
+    : mousePos{ 0, 0 }, consoleRect{ 0, 0, 0, 0 }, selectedBoardCoord(-1, -1),
     isForward(isForward), currentPiece(nullptr)
 {
     memset(board, -1, sizeof(board));
@@ -67,247 +68,66 @@ void GameplayLevel::Update(float deltaTime)
                         {
                             if (relativeY > ((row * 33 + 37) + 3) && relativeY < (((row + 1) * 33 + 37) - 3))
                             {
-                                selectedPieceIndex.xpos = row;
-                                selectedPieceIndex.ypos = col;
+                                selectedBoardCoord.xpos = row;
+                                selectedBoardCoord.ypos = col;
                                 goto OUT_OF_LOOP;
                             }
                         }
                     }
                 }
-            }
-        }
 
-    OUT_OF_LOOP:
-        // Chess piece is selected
-        if (isChessTurn &&
-            board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 0 &&
-            board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] <= 6)
-        {
-            if (isSelected)
-            {
-                if (currentPiece != nullptr)
+                OUT_OF_LOOP:
+
+                // Case with piece selected during own turn
+                if ((isChessTurn &&
+                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 0 &&
+                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 6) ||
+                    (!isChessTurn &&
+                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 7 &&
+                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 13))
                 {
-                    for (std::pair<int, int> catchablePosition : catchablePositions)
+                    if (isSelected)
                     {
-                        for (Actor* actor : actors)
-                        {
-                            if (actor->IsActive() &&
-                                actor->Position() == BoardCoordToPosition(catchablePosition.second, catchablePosition.first))
-                            {
-                                Piece* catchablePiece = dynamic_cast<Piece*>(actor);
-                                if (catchablePiece)
-                                {
-                                    catchablePiece->SetColor(Color::White);
-                                }
-                            }
-                        }
+                        InitializeBoard();
                     }
-                    currentPiece->SetColor(Color::White);
-                    currentPiece = nullptr;
-                    catchablePositions = {};
-                    movingMarkPositions = {};
+                    SelectPiece(selectedBoardCoord);
+                    ShowReachableWays();
+                    HighlightCatchableEnemies();
                 }
 
-                isSelected = false;
-                DeactivateMovingMark();
-            }
-
-            Vector2 selectedPosition = BoardCoordToPosition(selectedPieceIndex.ypos, selectedPieceIndex.xpos);
-
-            for (Actor* actor : actors)
-            {
-                if (actor->Position() == selectedPosition)
+                // Case with piece selected during other's turn
+                else if ((isChessTurn &&
+                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 7 &&
+                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 13) ||
+                    (!isChessTurn &&
+                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] >= 0 &&
+                    board[selectedBoardCoord.xpos][selectedBoardCoord.ypos] <= 6))
                 {
-                    isSelected = true;
-
-                    currentPiece = dynamic_cast<Piece*>(actor);
-                    currentPiece->SetColor(Color::Yellow);
-                    catchablePositions =
-                        currentPiece->CatchablePiecePosition(board, selectedPieceIndex.xpos, selectedPieceIndex.ypos, isForward);
-                    movingMarkPositions =
-                        currentPiece->ReachablePiecePosition(board, selectedPieceIndex.xpos, selectedPieceIndex.ypos, isForward);
-                }
-            }
-
-            for (std::pair<int, int> catchablePosition : catchablePositions)
-            {
-                for (Actor* actor : actors)
-                {
-                    if (actor->IsActive() &&
-                        actor->Position() == BoardCoordToPosition(catchablePosition.second, catchablePosition.first))
+                    if (isSelected)
                     {
-                        Piece* catchablePiece = dynamic_cast<Piece*>(actor);
-                        if (catchablePiece)
+                        // Can be catch enemy piece at selected position
+                        if (IsThreatenedPiece(selectedBoardCoord))
                         {
-                            catchablePiece->SetColor(Color::Red);
+                            CatchEnemyPiece(selectedBoardCoord);
                         }
+
+                        InitializeBoard();
                     }
                 }
-            }
 
-            if (!movingMarkPositions.empty())
-            {
-                for (std::pair<int, int> movingMarkPosition : movingMarkPositions)
+                // Case without Piece selected
+                else
                 {
-                    for (Actor* actor : actors)
+                    if (isSelected)
                     {
-                        if (actor->Position() == BoardCoordToPosition(movingMarkPosition.second, movingMarkPosition.first))
+                        // Can be moved to the selected position
+                        if (IsMarked(selectedBoardCoord))
                         {
-                            MovingMark* movingMark = dynamic_cast<MovingMark*>(actor);
-                            movingMark->SetActive(true);
-                        }
-                    }
-                }
-            }
-        }
-
-        // Janggi piece is selected
-        if (!isChessTurn &&
-            board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] >= 7 &&
-            board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] <= 13)
-        {
-            if (isSelected)
-            {
-                if (currentPiece != nullptr)
-                {
-                    for (std::pair<int, int> catchablePosition : catchablePositions)
-                    {
-                        for (Actor* actor : actors)
-                        {
-                            if (actor->IsActive() &&
-                                actor->Position() == BoardCoordToPosition(catchablePosition.second, catchablePosition.first))
-                            {
-                                Piece* catchablePiece = dynamic_cast<Piece*>(actor);
-                                if (catchablePiece)
-                                {
-                                    catchablePiece->SetColor(Color::White);
-                                }
-                            }
-                        }
-                    }
-                    currentPiece->SetColor(Color::White);
-                    currentPiece = nullptr;
-                    catchablePositions = {};
-                    movingMarkPositions = {};
-                }
-
-                isSelected = false;
-                DeactivateMovingMark();
-            }
-
-            Vector2 selectedPosition = BoardCoordToPosition(selectedPieceIndex.ypos, selectedPieceIndex.xpos);
-
-            for (Actor* actor : actors)
-            {
-                if (actor->Position() == selectedPosition)
-                {
-                    isSelected = true;
-
-                    currentPiece = dynamic_cast<Piece*>(actor);
-                    currentPiece->SetColor(Color::Yellow);
-                    catchablePositions =
-                        currentPiece->CatchablePiecePosition(board, selectedPieceIndex.xpos, selectedPieceIndex.ypos, isForward);
-                    movingMarkPositions =
-                        currentPiece->ReachablePiecePosition(board, selectedPieceIndex.xpos, selectedPieceIndex.ypos, isForward);
-                }
-            }
-
-            for (std::pair<int, int> catchablePosition : catchablePositions)
-            {
-                for (Actor* actor : actors)
-                {
-                    if (actor->IsActive() &&
-                        actor->Position() == BoardCoordToPosition(catchablePosition.second, catchablePosition.first))
-                    {
-                        Piece* catchablePiece = dynamic_cast<Piece*>(actor);
-                        if (catchablePiece)
-                        {
-                            catchablePiece->SetColor(Color::Red);
-                        }
-                    }
-                }
-            }
-
-            if (!movingMarkPositions.empty())
-            {
-                for (std::pair<int, int> movingMarkPosition : movingMarkPositions)
-                {
-                    for (Actor* actor : actors)
-                    {
-                        if (actor->Position() == BoardCoordToPosition(movingMarkPosition.second, movingMarkPosition.first))
-                        {
-                            MovingMark* movingMark = dynamic_cast<MovingMark*>(actor);
-                            movingMark->SetActive(true);
-                        }
-                    }
-                }
-            }
-        }
-
-        // Select a space that is not piece
-        else if (board[selectedPieceIndex.xpos][selectedPieceIndex.ypos] == -1)
-        {
-            for (Actor* actor : actors)
-            {
-                if (actor->Position() == BoardCoordToPosition(selectedPieceIndex.ypos, selectedPieceIndex.xpos))
-                {
-                    // Select STAR (MOVE)
-                    if (actor->IsActive())
-                    {
-                        Vector2 startpoint = currentPiece->Position();
-                        Vector2 destination = BoardCoordToPosition(selectedPieceIndex.ypos, selectedPieceIndex.xpos);
-
-                        currentPiece->SetPosition(destination);
-                        currentPiece->SetColor(Color::White);
-
-                        // Update Board
-                        if (startpoint != destination)
-                        {
-                            board[PositionToBoardCoord(destination).ypos][PositionToBoardCoord(destination).xpos] =
-                                board[PositionToBoardCoord(startpoint).ypos][PositionToBoardCoord(startpoint).xpos];
-
-                            board[PositionToBoardCoord(startpoint).ypos][PositionToBoardCoord(startpoint).xpos] = -1;
-                            isChessTurn = !isChessTurn;
-                        }
-
-                        for (Actor* temp : actors)
-                        {
-                            if (typeid(*temp).name() == typeid(MovingMark).name() &&
-                                temp->Position() == destination)
-                            {
-                                temp->SetPosition(startpoint);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (currentPiece != nullptr)
-                        {
-                            currentPiece->SetColor(Color::White);
-                            currentPiece = nullptr;
-                            catchablePositions = {};
-                            movingMarkPositions = {};
+                            MovePiece(selectedBoardCoord);
                         }
                     }
 
-                    for (std::pair<int, int> catchablePosition : catchablePositions)
-                    {
-                        for (Actor* actor : actors)
-                        {
-                            if (actor->IsActive() &&
-                                actor->Position() == BoardCoordToPosition(catchablePosition.second, catchablePosition.first))
-                            {
-                                Piece* catchablePiece = dynamic_cast<Piece*>(actor);
-                                if (catchablePiece)
-                                {
-                                    catchablePiece->SetColor(Color::White);
-                                }
-                            }
-                        }
-                    }
-
-                    isSelected = false;
-                    DeactivateMovingMark();
+                    InitializeBoard();
                 }
             }
         }
@@ -341,14 +161,141 @@ void GameplayLevel::Render()
     }
 }
 
-Vector2 GameplayLevel::BoardCoordToPosition(int xpos, int ypos)
+void GameplayLevel::InitializeBoard()
 {
-    return Vector2((xpos * 4) + 2, (ypos * 2) + 1);
+    for (Actor* actor : actors)
+    {
+        Piece* tempPieceActor = dynamic_cast<Piece*>(actor);
+        if (tempPieceActor != nullptr)
+        {
+            tempPieceActor->SetColor(Color::White);
+        }
+
+        else
+        {
+            actor->SetActive(false);
+        }
+    }
+
+    currentPiece = nullptr;
+    catchablePieceCoords = {};
+    reachablePieceCoords = {};
+    isSelected = false;
 }
 
-Vector2 GameplayLevel::PositionToBoardCoord(Vector2 position)
+void GameplayLevel::SelectPiece(Vector2 targetCoord)
 {
-    return Vector2((position.xpos - 2) / 4, (position.ypos - 1) / 2);
+    Vector2 consolePosition = BoardCoordToActorPosition(targetCoord);
+    
+    for (Actor* actor : actors)
+    {
+        Piece* tempPieceActor = dynamic_cast<Piece*>(actor);
+        if (tempPieceActor != nullptr &&
+            actor->Position() == consolePosition)
+        {
+            currentPiece = tempPieceActor;
+            currentPiece->SetColor(Color::Yellow);
+
+            catchablePieceCoords = currentPiece->CatchablePieceCoord(board, selectedBoardCoord, isForward);
+            reachablePieceCoords = currentPiece->ReachablePieceCoord(board, selectedBoardCoord, isForward);
+
+            break;
+        }
+    }
+
+    isSelected = true;
+}
+
+void GameplayLevel::ShowReachableWays()
+{
+    for (Actor* actor : actors)
+    {
+        for (Vector2 reachablePieceCoord : reachablePieceCoords)
+        {
+            MovingMark* tempMarkActor = dynamic_cast<MovingMark*>(actor);
+            if (tempMarkActor != nullptr &&
+                actor->Position() == BoardCoordToActorPosition(reachablePieceCoord))
+            {
+                tempMarkActor->SetActive(true);
+            }
+        }
+    }
+}
+
+void GameplayLevel::HighlightCatchableEnemies()
+{
+    for (Actor* actor : actors)
+    {
+        for (Vector2 catchablePieceCoord : catchablePieceCoords)
+        {
+            Piece* tempEnemyPieceActor = dynamic_cast<Piece*>(actor);
+            if (tempEnemyPieceActor != nullptr &&
+                actor->Position() == BoardCoordToActorPosition(catchablePieceCoord))
+            {
+                tempEnemyPieceActor->SetColor(Color::Red);
+            }
+        }
+    }
+}
+
+void GameplayLevel::MovePiece(Vector2 destinationCoord)
+{
+    Vector2 destinationPosition = BoardCoordToActorPosition(destinationCoord);
+
+    for (Actor* actor : actors)
+    {
+        if (actor->Position() == destinationPosition)
+        {
+            Vector2 currentPieceCoord = ActorPositionToBoardCoord(currentPiece->Position());
+           
+            // Update Board
+            int temp = board[destinationCoord.xpos][destinationCoord.ypos];
+
+            board[destinationCoord.xpos][destinationCoord.ypos] =
+                board[currentPieceCoord.xpos][currentPieceCoord.ypos];
+
+            board[currentPieceCoord.xpos][currentPieceCoord.ypos] = temp;
+
+            // Move piece
+            actor->SetPosition(currentPiece->Position());
+            currentPiece->SetPosition(destinationPosition);
+
+            InitializeBoard();
+            isChessTurn = !isChessTurn;
+
+            break;
+        }
+    }
+}
+
+// Enyme piece must be located at the destination
+void GameplayLevel::CatchEnemyPiece(Vector2 destinationCoord)
+{
+    Vector2 destinationPosition = BoardCoordToActorPosition(destinationCoord);
+
+    for (Actor* actor : actors)
+    {
+        if (actor->Position() == destinationPosition)
+        {
+            Vector2 currentPieceCoord = ActorPositionToBoardCoord(currentPiece->Position());
+
+            // Update Board
+            board[destinationCoord.xpos][destinationCoord.ypos] =
+                board[currentPieceCoord.xpos][currentPieceCoord.ypos];
+
+            board[currentPieceCoord.xpos][currentPieceCoord.ypos] = -1;
+
+            // Catch enyme piece
+            actor->Destroy();
+            currentPiece->SetPosition(destinationPosition);
+            GameplayLevel::AddActor(new MovingMark(BoardCoordToActorPosition(currentPieceCoord)));
+
+            InitializeBoard();
+            isChessTurn = !isChessTurn;
+
+            break;
+        }
+    }
 }
 
 void GameplayLevel::DeactivateMovingMark()
@@ -360,4 +307,53 @@ void GameplayLevel::DeactivateMovingMark()
             actor->SetActive(false);
         }
     }
+}
+
+bool GameplayLevel::IsMarked(Vector2 targetCoord)
+{
+    Vector2 consolePosition = BoardCoordToActorPosition(targetCoord);
+
+    for (Actor* actor : actors)
+    {
+        MovingMark* tempMarkActor = dynamic_cast<MovingMark*>(actor);
+        if (tempMarkActor != nullptr &&
+            actor->Position() == consolePosition &&
+            actor->IsActive())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool GameplayLevel::IsThreatenedPiece(Vector2 targetCoord)
+{
+    Vector2 consolePosition = BoardCoordToActorPosition(targetCoord);
+
+    for (Vector2 catchablePieceCoord : catchablePieceCoords)
+    {
+        Vector2 catchablePiecePosition = BoardCoordToActorPosition(catchablePieceCoord);
+        if (consolePosition == catchablePiecePosition)
+        {
+            for (Actor* actor : actors)
+            {
+                Piece* tempEnemyPieceActor = dynamic_cast<Piece*>(actor);
+                if (tempEnemyPieceActor != nullptr)
+                {
+                    return true;
+                }
+            }
+        }
+    } 
+    return false;
+}
+
+Vector2 GameplayLevel::BoardCoordToActorPosition(Vector2 boardCoord)
+{
+    return Vector2((boardCoord.ypos * 4) + 2, (boardCoord.xpos * 2) + 1);
+}
+
+Vector2 GameplayLevel::ActorPositionToBoardCoord(Vector2 actorPosition)
+{
+    return Vector2((actorPosition.ypos - 1) / 2, (actorPosition.xpos - 2) / 4);
 }

@@ -12,13 +12,13 @@ Cannon::~Cannon()
 {
 }
 
-std::vector<std::pair<int, int>> Cannon::CatchablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward)
+std::vector<Vector2> Cannon::CatchablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward)
 {
-    std::vector<std::pair<int, int>> resultList;
+    std::vector<Vector2> resultList;
 
     for (const auto& direction : directions) {
-        int currentRow = selectedRow;
-        int currentCol = selectedCol;
+        int currentRow = selectedCoord.xpos;
+        int currentCol = selectedCoord.ypos;
         bool isJumped = false;
 
         while (true) {
@@ -34,7 +34,7 @@ std::vector<std::pair<int, int>> Cannon::CatchablePiecePosition(int board[][9], 
                     isJumped = true;
                     continue;
                 }
-                resultList.push_back(std::pair<int, int>(currentRow, currentCol));
+                resultList.push_back(Vector2(currentRow, currentCol));
                 break;
             }
             else if (board[currentRow][currentCol] >= 7 && board[currentRow][currentCol] <= 13) {
@@ -50,25 +50,25 @@ std::vector<std::pair<int, int>> Cannon::CatchablePiecePosition(int board[][9], 
         }
     }
 
-    if (((selectedRow - selectedCol) == -3 || selectedRow + selectedCol == 5) &&
-        (selectedRow != 1 || selectedCol != 4) &&
+    if (((selectedCoord.xpos - selectedCoord.ypos) == -3 || selectedCoord.xpos + selectedCoord.ypos == 5) &&
+        (selectedCoord.xpos != 1 || selectedCoord.ypos != 4) &&
         (board[1][4] != -1 && board[1][4] != 8)) {
-        if (board[2 - selectedRow][8 - selectedCol] >= 7 && board[2 - selectedRow][8 - selectedCol] <= 13 &&
-            board[2 - selectedRow][8 - selectedCol] != 8) {
-            resultList.push_back(std::pair<int, int>(2 - selectedRow, 8 - selectedCol));
+        if (board[2 - selectedCoord.xpos][8 - selectedCoord.ypos] >= 7 && board[2 - selectedCoord.xpos][8 - selectedCoord.ypos] <= 13 &&
+            board[2 - selectedCoord.xpos][8 - selectedCoord.ypos] != 8) {
+            resultList.push_back(Vector2(2 - selectedCoord.xpos, 8 - selectedCoord.ypos));
         }
     }
 
     return resultList;
 }
 
-std::vector<std::pair<int, int>> Cannon::ReachablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward)
+std::vector<Vector2> Cannon::ReachablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward)
 {
-    std::vector<std::pair<int, int>> resultList;
+    std::vector<Vector2> resultList;
 
     for (const auto& direction : directions) {
-        int currentRow = selectedRow;
-        int currentCol = selectedCol;
+        int currentRow = selectedCoord.xpos;
+        int currentCol = selectedCoord.ypos;
         bool isJumped = false;
 
         while (true) {
@@ -84,7 +84,7 @@ std::vector<std::pair<int, int>> Cannon::ReachablePiecePosition(int board[][9], 
                     continue;
                 }
                 else {
-                    resultList.push_back(std::pair<int, int>(currentRow, currentCol));
+                    resultList.push_back(Vector2(currentRow, currentCol));
                 }
             }
 
@@ -101,11 +101,11 @@ std::vector<std::pair<int, int>> Cannon::ReachablePiecePosition(int board[][9], 
         }
     }
 
-    if (((selectedRow - selectedCol) == -3 || selectedRow + selectedCol == 5) &&
-        (selectedRow != 1 || selectedCol != 4) &&
+    if (((selectedCoord.xpos - selectedCoord.ypos) == -3 || selectedCoord.xpos + selectedCoord.ypos == 5) &&
+        (selectedCoord.xpos != 1 || selectedCoord.ypos != 4) &&
         (board[1][4] != -1 && board[1][4] != 8)) {
-        if (board[2 - selectedRow][8 - selectedCol] == -1) {
-            resultList.push_back(std::pair<int, int>(2 - selectedRow, 8 - selectedCol));
+        if (board[2 - selectedCoord.xpos][8 - selectedCoord.ypos] == -1) {
+            resultList.push_back(Vector2(2 - selectedCoord.xpos, 8 - selectedCoord.ypos));
         }
     }
 

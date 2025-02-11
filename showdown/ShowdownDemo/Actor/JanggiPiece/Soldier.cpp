@@ -12,74 +12,74 @@ Soldier::~Soldier()
 {
 }
 
-std::vector<std::pair<int, int>> Soldier::CatchablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward)
+std::vector<Vector2> Soldier::CatchablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward)
 {
-	std::vector<std::pair<int, int>> resultList = {};
+	std::vector<Vector2> resultList = {};
 
 	if (isForward)
 	{
-		if (selectedRow <= 7 &&
-			board[selectedRow + 1][selectedCol] >= 0 &&
-			board[selectedRow + 1][selectedCol] <= 6)
+		if (selectedCoord.xpos <= 7 &&
+			board[selectedCoord.xpos + 1][selectedCoord.ypos] >= 0 &&
+			board[selectedCoord.xpos + 1][selectedCoord.ypos] <= 6)
 		{
-			resultList.push_back(std::pair<int, int>(selectedRow + 1, selectedCol));
+			resultList.push_back(Vector2(selectedCoord.xpos + 1, selectedCoord.ypos));
 		}
 	}
 
 	else
 	{
-		if (selectedRow >= 1 &&
-			board[selectedRow - 1][selectedCol] >= 0 &&
-			board[selectedRow - 1][selectedCol] <= 6)
+		if (selectedCoord.xpos >= 1 &&
+			board[selectedCoord.xpos - 1][selectedCoord.ypos] >= 0 &&
+			board[selectedCoord.xpos - 1][selectedCoord.ypos] <= 6)
 		{
-			resultList.push_back(std::pair<int, int>(selectedRow - 1, selectedCol));
+			resultList.push_back(Vector2(selectedCoord.xpos - 1, selectedCoord.ypos));
 		}
 	}
 
-	if (selectedCol >= 1 &&
-		board[selectedRow][selectedCol - 1] >= 0 &&
-		board[selectedRow][selectedCol - 1] <= 6)
+	if (selectedCoord.ypos >= 1 &&
+		board[selectedCoord.xpos][selectedCoord.ypos - 1] >= 0 &&
+		board[selectedCoord.xpos][selectedCoord.ypos - 1] <= 6)
 	{
-		resultList.push_back(std::pair<int, int>(selectedRow, selectedCol - 1));
+		resultList.push_back(Vector2(selectedCoord.xpos, selectedCoord.ypos - 1));
 	}
 
-	if (selectedCol <= 7 &&
-		board[selectedRow][selectedCol + 1] >= 0 &&
-		board[selectedRow][selectedCol + 1] <= 6)
+	if (selectedCoord.ypos <= 7 &&
+		board[selectedCoord.xpos][selectedCoord.ypos + 1] >= 0 &&
+		board[selectedCoord.xpos][selectedCoord.ypos + 1] <= 6)
 	{
-		resultList.push_back(std::pair<int, int>(selectedRow, selectedCol + 1));
+		resultList.push_back(Vector2(selectedCoord.xpos, selectedCoord.xpos + 1));
 	}
 
 	return resultList;
 }
 
-std::vector<std::pair<int, int>> Soldier::ReachablePiecePosition(int board[][9], int selectedRow, int selectedCol, bool isForward)
+std::vector<Vector2> Soldier::ReachablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward)
 {
-	std::vector<std::pair<int, int>> resultList = {};
+	std::vector<Vector2> resultList = {};
 
 	if (isForward)
 	{
-		if (board[selectedRow + 1][selectedCol] == -1)
+		if (selectedCoord.xpos < 8 && board[selectedCoord.xpos + 1][selectedCoord.ypos] == -1)
 		{
-			resultList.push_back(std::pair<int, int>(selectedRow + 1, selectedCol));
+			resultList.push_back(Vector2(selectedCoord.xpos + 1, selectedCoord.ypos));
 		}
 	}
 
 	else
 	{
-		if (board[selectedRow - 1][selectedCol] == -1)
+		if (selectedCoord.xpos > 0 && board[selectedCoord.xpos - 1][selectedCoord.ypos] == -1)
 		{
-			resultList.push_back(std::pair<int, int>(selectedRow - 1, selectedCol));
+			resultList.push_back(Vector2(selectedCoord.xpos - 1, selectedCoord.ypos));
 		}
 	}
 
-	if (selectedCol > 1 && board[selectedRow][selectedCol - 1] == -1)
+	if (selectedCoord.ypos > 1 && board[selectedCoord.xpos][selectedCoord.ypos - 1] == -1)
 	{
-		resultList.push_back(std::pair<int, int>(selectedRow, selectedCol - 1));
+		resultList.push_back(Vector2(selectedCoord.xpos, selectedCoord.ypos - 1));
 	}
-	if (selectedCol < 8 && board[selectedRow][selectedCol + 1] == -1)
+	if (selectedCoord.ypos < 8 && board[selectedCoord.xpos][selectedCoord.ypos + 1] == -1)
 	{
-		resultList.push_back(std::pair<int, int>(selectedRow, selectedCol + 1));
+		resultList.push_back(Vector2(selectedCoord.xpos, selectedCoord.ypos + 1));
 	}
 
 	return resultList;
