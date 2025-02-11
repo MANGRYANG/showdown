@@ -50,6 +50,19 @@ void GameplayLevel::Update(float deltaTime)
 
     GetWindowRect(consoleWindow, &consoleRect);
 
+    // Game is over
+    if (IsGameOver())
+    {
+        if (isChessWin)
+        {
+
+        }
+        else
+        {
+
+        }
+    }
+
     if (Engine::Get().GetKeyDown(VK_ESCAPE))
     {
         Engine::Get().Shutdown();
@@ -411,6 +424,34 @@ bool GameplayLevel::IsThreatenedPiece(Vector2 targetCoord)
             }
         }
     } 
+    return false;
+}
+
+bool GameplayLevel::IsGameOver()
+{
+    isChessWin = true;
+    isJanggiWin = true;
+
+    for (int row = 0; row < 9; ++row)
+    {
+        for (int col = 0; col < 9; ++col)
+        {
+            if (board[row][col] == 0)
+            {
+                isJanggiWin = false;
+            }
+            if (board[row][col] == 7)
+            {
+                isChessWin = false;
+            }
+        }
+    }
+
+    if (isChessWin || isJanggiWin)
+    {
+        return true;
+    }
+
     return false;
 }
 

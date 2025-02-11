@@ -34,6 +34,8 @@ protected:
 
 	bool IsThreatenedPiece(Vector2 targetCoord);
 
+	bool IsGameOver();
+
 	Vector2 BoardCoordToActorPosition(Vector2 boardCoord);
 	Vector2 ActorPositionToBoardCoord(Vector2 actorPosition);
 
@@ -55,5 +57,8 @@ protected:
 	bool isChessTurn = true;
 	bool isSelected = false;
 	const bool isForward;
+	
+	bool isChessWin = false;
+	bool isJanggiWin = false;
 
 };
