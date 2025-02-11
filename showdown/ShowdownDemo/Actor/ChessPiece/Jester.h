@@ -14,13 +14,9 @@ public:
     std::vector<Vector2> ReachablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward) override;
 
     int directions[8][2] = {
-        {-1, -1},
         {-1, 0},
-        {-1, 1},
         {0, -1},
         {0, 1},
-        {1, -1},
         {1, 0},
-        {1, 1}
     };
 };
