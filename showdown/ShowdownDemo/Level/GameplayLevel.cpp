@@ -109,7 +109,7 @@ void GameplayLevel::Update(float deltaTime)
                                 // Can be catch enemy piece at selected position
                                 if (IsThreatenedPiece(selectedBoardCoord))
                                 {
-                                    SetNotationDefault(ActorPositionToBoardCoord(currentPiece->Position()), selectedBoardCoord, true);
+                                    SetNotationDefault(ActorPositionToBoardCoord(currentPiece->GetPosition()), selectedBoardCoord, true);
                                     CatchEnemyPiece(selectedBoardCoord);
                                     Promotion();
                                     CheckStatusSetting();
@@ -130,7 +130,7 @@ void GameplayLevel::Update(float deltaTime)
                                 // Can be moved to the selected position
                                 if (IsMarked(selectedBoardCoord))
                                 {
-                                    SetNotationDefault(ActorPositionToBoardCoord(currentPiece->Position()), selectedBoardCoord, false);
+                                    SetNotationDefault(ActorPositionToBoardCoord(currentPiece->GetPosition()), selectedBoardCoord, false);
                                     MovePiece(selectedBoardCoord);
                                     Promotion();
                                     CheckStatusSetting();
@@ -245,7 +245,7 @@ void GameplayLevel::SelectPiece(Vector2 targetCoord)
     {
         Piece* tempPieceActor = dynamic_cast<Piece*>(actor);
         if (tempPieceActor != nullptr &&
-            actor->Position() == consolePosition)
+            actor->GetPosition() == consolePosition)
         {
             currentPiece = tempPieceActor;
             currentPiece->SetColor(Color::Yellow);
@@ -268,7 +268,7 @@ void GameplayLevel::ShowReachableWays()
         {
             MovingMark* tempMarkActor = dynamic_cast<MovingMark*>(actor);
             if (tempMarkActor != nullptr &&
-                actor->Position() == BoardCoordToActorPosition(reachablePieceCoord))
+                actor->GetPosition() == BoardCoordToActorPosition(reachablePieceCoord))
             {
                 tempMarkActor->SetActive(true);
             }
@@ -284,7 +284,7 @@ void GameplayLevel::HighlightCatchableEnemies()
         {
             Piece* tempEnemyPieceActor = dynamic_cast<Piece*>(actor);
             if (tempEnemyPieceActor != nullptr &&
-                actor->Position() == BoardCoordToActorPosition(catchablePieceCoord))
+                actor->GetPosition() == BoardCoordToActorPosition(catchablePieceCoord))
             {
                 tempEnemyPieceActor->SetColor(Color::Red);
             }
@@ -298,9 +298,9 @@ void GameplayLevel::MovePiece(Vector2 destinationCoord)
 
     for (Actor* actor : actors)
     {
-        if (actor->Position() == destinationPosition)
+        if (actor->GetPosition() == destinationPosition)
         {
-            Vector2 currentPieceCoord = ActorPositionToBoardCoord(currentPiece->Position());
+            Vector2 currentPieceCoord = ActorPositionToBoardCoord(currentPiece->GetPosition());
            
             // Update Board
             int temp = board[destinationCoord.xpos][destinationCoord.ypos];
@@ -311,7 +311,7 @@ void GameplayLevel::MovePiece(Vector2 destinationCoord)
             board[currentPieceCoord.xpos][currentPieceCoord.ypos] = temp;
 
             // Move piece
-            actor->SetPosition(currentPiece->Position());
+            actor->SetPosition(currentPiece->GetPosition());
             currentPiece->SetPosition(destinationPosition);
 
             break;
@@ -326,9 +326,9 @@ void GameplayLevel::CatchEnemyPiece(Vector2 destinationCoord)
 
     for (Actor* actor : actors)
     {
-        if (actor->Position() == destinationPosition)
+        if (actor->GetPosition() == destinationPosition)
         {
-            Vector2 currentPieceCoord = ActorPositionToBoardCoord(currentPiece->Position());
+            Vector2 currentPieceCoord = ActorPositionToBoardCoord(currentPiece->GetPosition());
 
             // Update Board
             board[destinationCoord.xpos][destinationCoord.ypos] =
@@ -462,7 +462,7 @@ void GameplayLevel::Promotion()
             {
                 Piece* tempPieceActor = dynamic_cast<Piece*>(actor);
                 if (tempPieceActor != nullptr &&
-                    actor->Position() == tempPawnPiecePosition)
+                    actor->GetPosition() == tempPawnPiecePosition)
                 {
                     tempPieceActor->Destroy();
                     break;
@@ -514,7 +514,7 @@ void GameplayLevel::Promotion()
 
 void GameplayLevel::CheckStatusSetting()
 {
-    Vector2 currentCoord = ActorPositionToBoardCoord(currentPiece->Position());
+    Vector2 currentCoord = ActorPositionToBoardCoord(currentPiece->GetPosition());
 
     if ((board[currentCoord.xpos][currentCoord.ypos] > 0 && board[currentCoord.xpos][currentCoord.ypos] < 6) ||
         (board[currentCoord.xpos][currentCoord.ypos] > 7 && board[currentCoord.xpos][currentCoord.ypos] < 13))
@@ -540,7 +540,7 @@ bool GameplayLevel::IsMarked(Vector2 targetCoord)
     {
         MovingMark* tempMarkActor = dynamic_cast<MovingMark*>(actor);
         if (tempMarkActor != nullptr &&
-            actor->Position() == consolePosition &&
+            actor->GetPosition() == consolePosition &&
             actor->IsActive())
         {
             return true;
