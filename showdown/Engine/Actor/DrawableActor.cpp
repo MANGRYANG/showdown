@@ -33,7 +33,7 @@ void DrawableActor::SetPosition(const Vector2& newPosition)
 
 Vector2 DrawableActor::GetPosition() const
 {
-	return Super::Position();
+	return Super::GetPosition();
 }
 
 void DrawableActor::SetColor(const Color& color)

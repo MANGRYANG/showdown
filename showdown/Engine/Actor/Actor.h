@@ -18,12 +18,12 @@ public:
 	virtual ~Actor();
 
 	// Function for loop processing
-	virtual void Update(float delatTime);
+	virtual void Update(float deltaTime);
 	virtual void Draw();
 
 	// Getter & Setter
 	virtual void SetPosition(const Vector2& newPosition);
-	virtual Vector2 Position() const;
+	virtual Vector2 GetPosition() const;
 
 	// Inline function
 	inline bool IsActive() const { return isActive; }

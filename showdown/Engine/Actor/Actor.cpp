@@ -12,7 +12,7 @@ Actor::~Actor()
 {
 }
 
-void Actor::Update(float delatTime) 
+void Actor::Update(float deltaTime) 
 {
 }
 
@@ -25,7 +25,7 @@ void Actor::SetPosition(const Vector2& newPosition)
 	position = newPosition;
 }
 
-Vector2 Actor::Position() const
+Vector2 Actor::GetPosition() const
 {
 	return position;
 }
