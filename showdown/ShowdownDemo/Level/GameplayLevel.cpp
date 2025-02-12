@@ -30,7 +30,7 @@ GameplayLevel::GameplayLevel(bool isForward)
     memset(board, -1, sizeof(board));
 
     notationMessagePosition = BoardCoordToActorPosition(Vector2(0, 11));
-    gameOverMessagePosition = BoardCoordToActorPosition(Vector2(11, 0));
+    gameOverMessagePosition = BoardCoordToActorPosition(Vector2(15, 0));
 
     GetAsyncKeyState(VK_LBUTTON & 1);
 }
@@ -211,6 +211,13 @@ void GameplayLevel::Render()
             Engine::Get().Render(Vector2(28 + ix * 4, i * 2 - 1), "¦¢", Color::White);
         }
     }
+
+    for (int i = 0; i < 7; ++i)
+    {
+        Engine::Get().Render(Vector2(39, 21 + i), "¦¢", Color::White);
+    }
+    Engine::Get().Render(Vector2(0, 28), "_______________________________________/", Color::White);
+
 }
 
 void GameplayLevel::InitializeBoard()
