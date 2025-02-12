@@ -1,31 +1,41 @@
 #include "PCH.h"
 #include "Actor.h"
-
 #include "CoreMinimal.h"
 
-Actor::Actor(Vector2 position)
-	: isActive(true), isExpired(false)
+// Constructor initializes the actor's position and sets the default state.
+Actor::Actor(const Vector2& initPosition)
+    : position(initPosition)
+    , isActive(true)
+    , isExpired(false)
 {
 }
 
-Actor::~Actor()
+// Use default destructor since no dynamic resources are managed.
+Actor::~Actor() = default;
+
+// Update the actor state.
+// This method can be overridden by derived classes to provide custom behavior.
+void Actor::Update(float deltaTime)
 {
+    // TODO: Implement update logic.
+    // For example: update movement, check collisions, etc.
 }
 
-void Actor::Update(float delatTime) 
+// Render the actor.
+// This method can be overridden by derived classes to draw custom visuals.
+void Actor::Draw()
 {
+    // TODO: Implement draw logic.
 }
 
-void Actor::Draw() 
-{
-}
-
+// Set a new position for the actor.
 void Actor::SetPosition(const Vector2& newPosition)
 {
-	position = newPosition;
+    position = newPosition;
 }
 
-Vector2 Actor::Position() const
+// Retrieve the current position of the actor.
+Vector2 Actor::GetPosition() const
 {
-	return position;
+    return position;
 }
