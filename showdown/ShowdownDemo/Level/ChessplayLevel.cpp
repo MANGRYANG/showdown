@@ -1,4 +1,3 @@
-#include "Engine/Engine.h"
 #include "ChessplayLevel.h"
 
 ChessplayLevel::ChessplayLevel()
@@ -112,5 +111,19 @@ void ChessplayLevel::Render()
         {
             Engine::Get().Render(Vector2(12 + ix * 4, i * 2 - 1), "¦¢", ((i <= 3) ? Color::Magenta : ((i > 3 && i <= 6) ? Color::White : Color::Cyan)));
         }
+    }
+
+    // Rendering Coordination Guide
+    Engine::Get().Render(Vector2(2, 19), "a   b   c   d   e   f   g   h   i", Color::White);
+    Engine::Get().Render(Vector2(0, 20), "________________________________________/", Color::White);
+
+    for (int i = 0; i < 9; ++i)
+    {
+        Engine::Get().Render(Vector2(38, i * 2 + 1), std::to_string(9 - i).c_str(), Color::White);
+    }
+
+    for (int i = 0; i < 20; ++i)
+    {
+        Engine::Get().Render(Vector2(40, i), "¦¢", Color::White);
     }
 }

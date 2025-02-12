@@ -8,8 +8,8 @@ class Text : public DrawableActor
 	RTTI_DECLARATIONS(Text, DrawableActor)
 
 public:
-	Text(const char* image, Vector2 location);
-	Text(const char* image, Vector2 location, Color color);
+	Text(const char* textMessage, Vector2 location);
+	Text(const char* textMessage, Vector2 location, Color color);
 	~Text();
 
 	virtual void Update(float deltaTime) override;

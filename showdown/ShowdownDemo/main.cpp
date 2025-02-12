@@ -15,7 +15,7 @@ int opt = 0;
 int main(void)
 {
     SetConsoleTitle("Showdown");
-    system("mode con:cols=144 lines=40");
+    system("mode con:cols=150 lines=40");
     std::cout << R"(
   .     ______ _                     _                         
  /\\   / _____) |                   | |                  ___ __ __       

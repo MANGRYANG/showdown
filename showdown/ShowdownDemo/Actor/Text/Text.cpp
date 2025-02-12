@@ -2,15 +2,15 @@
 #include "Engine/Engine.h"
 #include "Math/Vector2.h"
 
-Text::Text(const char* image, Vector2 location)
-	: Super(image, location)
+Text::Text(const char* textMessage, Vector2 location)
+	: Super(textMessage, location)
 {
 	this->position.xpos = location.xpos;
 	this->position.ypos = location.ypos;
 }
 
-Text::Text(const char* image, Vector2 location, Color color)
-	: Super(image, location)
+Text::Text(const char* textMessage, Vector2 location, Color color)
+	: Super(textMessage, location)
 {
 	this->position.xpos = location.xpos;
 	this->position.ypos = location.ypos;
