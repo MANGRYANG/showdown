@@ -12,24 +12,55 @@ Emperor::~Emperor()
 {
 }
 
-std::vector<Vector2> Emperor::CatchablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward) {
+std::vector<Vector2> Emperor::CatchablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward)
+{
     std::vector<Vector2> resultList;
 
-    for (int idx = 0; idx < 8; ++idx) {
+    for (int idx = 0; idx < 8; ++idx)
+    {
         int currentRow = selectedCoord.xpos + directions[idx][0];
         int currentCol = selectedCoord.ypos + directions[idx][1];
 
-        if (currentRow >= 0 && currentRow <= 2 && currentCol >= 3 && currentCol <= 5) {
+        if (isForward &&
+            (currentRow >= 0 && currentRow <= 2) &&
+            (currentCol >= 3 && currentCol <= 5))
+        {
             // Corner or Middle
-            if ((selectedCoord.xpos + selectedCoord.ypos == 5) || (selectedCoord.xpos - selectedCoord.ypos) == -3) {
-                if (board[currentRow][currentCol] >= 0 && board[currentRow][currentCol] <= 6) {
+            if ((selectedCoord.xpos + selectedCoord.ypos == 5) || (selectedCoord.xpos - selectedCoord.ypos) == -3)
+            {
+                if (board[currentRow][currentCol] >= 0 && board[currentRow][currentCol] <= 6)
+                {
                     resultList.push_back(Vector2(currentRow, currentCol));
                 }
             }
             // Side
-            else {
+            else
+            {
                 if ((idx < 4) &&
-                    board[currentRow][currentCol] >= 0 && board[currentRow][currentCol] <= 6) {
+                    board[currentRow][currentCol] >= 0 && board[currentRow][currentCol] <= 6)
+                {
+                    resultList.push_back(Vector2(currentRow, currentCol));
+                }
+            }
+        }
+        else if (!isForward &&
+            (currentRow >= 6 && currentRow <= 8) &&
+            (currentCol >= 3 && currentCol <= 5))
+        {
+            // Corner or Middle
+            if ((selectedCoord.xpos + selectedCoord.ypos == 11) || (selectedCoord.xpos - selectedCoord.ypos) == 3)
+            {
+                if (board[currentRow][currentCol] >= 0 && board[currentRow][currentCol] <= 6)
+                {
+                    resultList.push_back(Vector2(currentRow, currentCol));
+                }
+            }
+            // Side
+            else
+            {
+                if ((idx < 4) &&
+                    board[currentRow][currentCol] >= 0 && board[currentRow][currentCol] <= 6)
+                {
                     resultList.push_back(Vector2(currentRow, currentCol));
                 }
             }
@@ -39,27 +70,63 @@ std::vector<Vector2> Emperor::CatchablePieceCoord(int board[][9], Vector2 select
     return resultList;
 }
 
-std::vector<Vector2> Emperor::ReachablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward) {
+std::vector<Vector2> Emperor::ReachablePieceCoord(int board[][9], Vector2 selectedCoord, bool isForward)
+{
     std::vector<Vector2> resultList;
 
-    for (int idx = 0; idx < 8; ++idx) {
+    for (int idx = 0; idx < 8; ++idx)
+    {
         int currentRow = selectedCoord.xpos + directions[idx][0];
         int currentCol = selectedCoord.ypos + directions[idx][1];
 
-        if (currentRow >= 0 && currentRow <= 2 && currentCol >= 3 && currentCol <= 5) {
+        if (isForward &&
+            (currentRow >= 0 && currentRow <= 2) &&
+            (currentCol >= 3 && currentCol <= 5))
+        {
             // Corner or Middle
-            if ((selectedCoord.xpos + selectedCoord.ypos == 5) || (selectedCoord.xpos - selectedCoord.ypos) == -3) {
-                if (board[currentRow][currentCol] == -1) {
+            if ((selectedCoord.xpos + selectedCoord.ypos == 5) || (selectedCoord.xpos - selectedCoord.ypos) == -3)
+            {
+                if (board[currentRow][currentCol] == -1)
+                {
                     resultList.push_back(Vector2(currentRow, currentCol));
                 }
-                else if (board[currentRow][currentCol] >= 7 && board[currentRow][currentCol] <= 13) {
+                else if (board[currentRow][currentCol] >= 7 && board[currentRow][currentCol] <= 13)
+                {
                     continue;
                 }
             }
             // Side
-            else {
+            else
+            {
                 if ((idx < 4) &&
-                    board[currentRow][currentCol] == -1) {
+                    board[currentRow][currentCol] == -1)
+                {
+                    resultList.push_back(Vector2(currentRow, currentCol));
+                }
+            }
+        }
+        else if (!isForward &&
+            (currentRow >= 6 && currentRow <= 8) &&
+            (currentCol >= 3 && currentCol <= 5))
+        {
+            // Corner or Middle
+            if ((selectedCoord.xpos + selectedCoord.ypos == 11) || (selectedCoord.xpos - selectedCoord.ypos) == 3)
+            {
+                if (board[currentRow][currentCol] == -1)
+                {
+                    resultList.push_back(Vector2(currentRow, currentCol));
+                }
+                else if (board[currentRow][currentCol] >= 7 && board[currentRow][currentCol] <= 13)
+                {
+                    continue;
+                }
+            }
+            // Side
+            else
+            {
+                if ((idx < 4) &&
+                    board[currentRow][currentCol] == -1)
+                {
                     resultList.push_back(Vector2(currentRow, currentCol));
                 }
             }
