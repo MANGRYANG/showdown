@@ -1,4 +1,3 @@
-#include "Engine/Engine.h"
 #include "JanggiplayLevel.h"
 
 JanggiplayLevel::JanggiplayLevel()
@@ -13,7 +12,7 @@ JanggiplayLevel::JanggiplayLevel()
 		{12, -1, 12, -1, 12, -1, 12, -1, 12},
 		{-1, 8, -1, -1, -1, -1, -1, 8, -1},
 		{-1, -1, -1, -1, 7, -1, -1, -1, -1},
-		{11, 9, 10, 13, -1, 13, 9, 10, 11},
+		{11, 10, 9, 13, -1, 13, 10, 9, 11},
 	};
 
 	for (int i = 0; i < 9; ++i) {
@@ -113,4 +112,18 @@ void JanggiplayLevel::Render()
 			Engine::Get().Render(Vector2(12 + ix * 4, i * 2 - 1), "¦¢", ((i <= 3) ? Color::Cyan : ((i > 3 && i <= 6) ? Color::White : Color::Magenta)));
 		}
 	}
+
+    // Rendering Coordination Guide
+    Engine::Get().Render(Vector2(2, 19), "i   h   g   f   e   d   c   b   a", Color::White);
+    Engine::Get().Render(Vector2(0, 20), "________________________________________/", Color::White);
+
+    for (int i = 0; i < 9; ++i)
+    {
+        Engine::Get().Render(Vector2(38, i * 2 + 1), std::to_string(i + 1).c_str(), Color::White);
+    }
+
+    for (int i = 0; i < 20; ++i)
+    {
+        Engine::Get().Render(Vector2(40, i), "¦¢", Color::White);
+    }
 }

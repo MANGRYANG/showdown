@@ -1,13 +1,4 @@
 #include "GameplayLevel.h"
-#include "Engine/Engine.h"
-#include "Actor/ChessPiece/Queen.h"
-#include "Actor/ChessPiece/Rook.h"
-#include "Actor/ChessPiece/Bishop.h"
-#include "Actor/ChessPiece/Knight.h"
-#include "Actor/Text/Text.h"
-
-#include <conio.h>
-
 
 /*
 * Chess pieces
@@ -38,7 +29,8 @@ GameplayLevel::GameplayLevel(bool isForward)
 {
     memset(board, -1, sizeof(board));
 
-    gameOverMessagePosition = BoardCoordToActorPosition(Vector2(10, 0));
+    notationMessagePosition = BoardCoordToActorPosition(Vector2(0, 11));
+    gameOverMessagePosition = BoardCoordToActorPosition(Vector2(11, 0));
 
     GetAsyncKeyState(VK_LBUTTON & 1);
 }
@@ -117,8 +109,13 @@ void GameplayLevel::Update(float deltaTime)
                                 // Can be catch enemy piece at selected position
                                 if (IsThreatenedPiece(selectedBoardCoord))
                                 {
+                                    SetNotationDefault(ActorPositionToBoardCoord(currentPiece->Position()), selectedBoardCoord, true);
                                     CatchEnemyPiece(selectedBoardCoord);
                                     Promotion();
+                                    CheckStatusSetting();
+                                    PrintNotation();
+
+                                    isChessTurn = !isChessTurn;
                                 }
 
                                 InitializeBoard();
@@ -133,8 +130,13 @@ void GameplayLevel::Update(float deltaTime)
                                 // Can be moved to the selected position
                                 if (IsMarked(selectedBoardCoord))
                                 {
+                                    SetNotationDefault(ActorPositionToBoardCoord(currentPiece->Position()), selectedBoardCoord, false);
                                     MovePiece(selectedBoardCoord);
                                     Promotion();
+                                    CheckStatusSetting();
+                                    PrintNotation();
+
+                                    isChessTurn = !isChessTurn;
                                 }
                             }
 
@@ -145,7 +147,7 @@ void GameplayLevel::Update(float deltaTime)
             }
         }
 
-        if (IsGameOver())
+        else
         {
             isLevelStopped = true;
 
@@ -172,6 +174,7 @@ void GameplayLevel::Update(float deltaTime)
 
             GameplayLevel::ProcessAddedAndDestroyedActor();
         }
+
 
     }
     
@@ -215,12 +218,14 @@ void GameplayLevel::InitializeBoard()
     for (Actor* actor : actors)
     {
         Piece* tempPieceActor = dynamic_cast<Piece*>(actor);
+        MovingMark* tempMarkActor = dynamic_cast<MovingMark*>(actor);
+
         if (tempPieceActor != nullptr)
         {
             tempPieceActor->SetColor(Color::White);
         }
 
-        else
+        else if (tempMarkActor != nullptr)
         {
             actor->SetActive(false);
         }
@@ -309,9 +314,6 @@ void GameplayLevel::MovePiece(Vector2 destinationCoord)
             actor->SetPosition(currentPiece->Position());
             currentPiece->SetPosition(destinationPosition);
 
-            InitializeBoard();
-            isChessTurn = !isChessTurn;
-
             break;
         }
     }
@@ -340,18 +342,105 @@ void GameplayLevel::CatchEnemyPiece(Vector2 destinationCoord)
             GameplayLevel::AddActor(new MovingMark(BoardCoordToActorPosition(currentPieceCoord)));
             GameplayLevel::ProcessAddedAndDestroyedActor();
 
-            InitializeBoard();
-            isChessTurn = !isChessTurn;
-
             break;
         }
     }
 }
 
+void GameplayLevel::SetNotationDefault(Vector2 startCoord, Vector2 endCoord, bool isCapture)
+{
+    currentNotation = "";
+
+    switch (board[startCoord.xpos][startCoord.ypos])
+    {
+    case 0:
+        currentNotation += "K";
+        break;
+    case 1:
+        currentNotation += "Q";
+        break;
+    case 2:
+        currentNotation += "R";
+        break;
+    case 3:
+        currentNotation += "B";
+        break;
+    case 4:
+        currentNotation += "N";
+        break;
+    case 5:
+        if (isCapture)
+        {
+            currentNotation += ('a' + startCoord.ypos);
+        }
+        break;
+    case 6:
+        currentNotation += "J";
+        break;
+
+    case 7:
+        currentNotation += "E";
+        break;
+
+    case 8:
+        currentNotation += "C";
+        break;
+
+    case 9:
+        currentNotation += "L";
+        break;
+
+    case 10:
+        currentNotation += "H";
+        break;
+
+    case 11:
+        currentNotation += "T";
+        break;
+
+    case 12:
+        currentNotation += "S";
+        break;
+
+    case 13:
+        currentNotation += "G";
+        break;
+
+    default:
+        break;
+    }
+
+    if (isCapture)
+    {
+        currentNotation += "x";
+    }
+    
+    currentNotation += ('a' + endCoord.ypos);
+    currentNotation += ('9' - endCoord.xpos);
+}
+
+void GameplayLevel::PrintNotation()
+{
+    notationCounterText = std::to_string(notationCount + 1) + '.';
+
+    int columnLineNumber = (notationCount / 10);
+    int indexInLine = notationCount % 10;
+
+    GameplayLevel::AddActor(new Text(notationCounterText.c_str(),
+        Vector2(notationMessagePosition.xpos + (indexInLine * 10), notationMessagePosition.ypos + (columnLineNumber * 2)), Color::Yellow));
+
+    GameplayLevel::AddActor(new Text(currentNotation.c_str(),
+        Vector2(notationMessagePosition.xpos + 3 + (indexInLine * 10),
+            notationMessagePosition.ypos + (columnLineNumber * 2))));
+
+    GameplayLevel::ProcessAddedAndDestroyedActor();
+
+    ++notationCount;
+}
+
+
 void GameplayLevel::Promotion()
 {
-    InitializeBoard();
-
     int lastRow;
 
     if (isForward)
@@ -367,9 +456,6 @@ void GameplayLevel::Promotion()
     {
         if (board[lastRow][x] == 5)
         {
-            // Update board
-            board[lastRow][x] = 1;
-
             Vector2 tempPawnPiecePosition = BoardCoordToActorPosition(Vector2(lastRow, x));
 
             for (Actor* actor : actors)
@@ -383,27 +469,37 @@ void GameplayLevel::Promotion()
                 }
             }
 
-        INPUT_PROMOTIONTYPE:
+            currentNotation += "=";
+
+            INPUT_PROMOTIONTYPE:
             switch (_getch())
             {
             case 'Q':
             case 'q':
                 GameplayLevel::AddActor(new Queen(tempPawnPiecePosition));
+                currentNotation += "Q";
+                board[lastRow][x] = 1;
                 break;
 
             case 'R':
             case 'r':
                 GameplayLevel::AddActor(new Rook(tempPawnPiecePosition));
+                currentNotation += "R";
+                board[lastRow][x] = 2;
                 break;
 
             case 'B':
             case 'b':
                 GameplayLevel::AddActor(new Bishop(tempPawnPiecePosition));
+                currentNotation += "B";
+                board[lastRow][x] = 3;
                 break;
 
             case 'N':
             case 'n':
                 GameplayLevel::AddActor(new Knight(tempPawnPiecePosition));
+                currentNotation += "N";
+                board[lastRow][x] = 4;
                 break;
             default:
                 goto INPUT_PROMOTIONTYPE;
@@ -412,6 +508,26 @@ void GameplayLevel::Promotion()
             GameplayLevel::ProcessAddedAndDestroyedActor();
 
             break;
+        }
+    }
+}
+
+void GameplayLevel::CheckStatusSetting()
+{
+    Vector2 currentCoord = ActorPositionToBoardCoord(currentPiece->Position());
+
+    if ((board[currentCoord.xpos][currentCoord.ypos] > 0 && board[currentCoord.xpos][currentCoord.ypos] < 6) ||
+        (board[currentCoord.xpos][currentCoord.ypos] > 7 && board[currentCoord.xpos][currentCoord.ypos] < 13))
+    {
+        catchablePieceCoords = currentPiece->CatchablePieceCoord(board, selectedBoardCoord, isForward);
+        for (Vector2 catchablePieceCoord : catchablePieceCoords)
+        {
+            if (board[catchablePieceCoord.xpos][catchablePieceCoord.ypos] == 0 ||
+                board[catchablePieceCoord.xpos][catchablePieceCoord.ypos] == 7)
+            {
+                currentNotation += "+";
+                break;
+            }
         }
     }
 }
