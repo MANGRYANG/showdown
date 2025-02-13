@@ -114,12 +114,12 @@ void JanggiplayLevel::Render()
 	}
 
     // Rendering Coordination Guide
-    Engine::Get().Render(Vector2(2, 19), "i   h   g   f   e   d   c   b   a", Color::White);
+    Engine::Get().Render(Vector2(2, 19), "i   h   g   f   e   d   c   b   a", Color::Yellow);
     Engine::Get().Render(Vector2(0, 20), "________________________________________/", Color::White);
 
     for (int i = 0; i < 9; ++i)
     {
-        Engine::Get().Render(Vector2(38, i * 2 + 1), std::to_string(i + 1).c_str(), Color::White);
+        Engine::Get().Render(Vector2(38, i * 2 + 1), std::to_string(i + 1).c_str(), Color::Yellow);
     }
 
     for (int i = 0; i < 20; ++i)
