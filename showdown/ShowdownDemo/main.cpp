@@ -2,6 +2,8 @@
 #include "Level/ChessplayLevel.h"
 #include "Level/JanggiplayLevel.h"
 
+#include <limits>
+
 void static PrintLine()
 {
     std::cout << "===================================================================\n";
@@ -38,6 +40,14 @@ int main(void)
     std::cout << "1- Multiplay Mode\n2- Practice Mode\nEnter (1 / 2): ";
     std::cin >> gamemode_opt;
 
+    if (std::cin.fail() || (gamemode_opt != 1 && gamemode_opt != 2)) {
+        std::cin.clear();
+        std::cin.ignore(32767, '\n');
+        PrintLine();
+        std::cout << "Invalid option, please enter a valid option." << std::endl;
+        goto SELECT_GAMEMODE;
+    }
+
     if (gamemode_opt == 1)
     {
         PrintLine();
@@ -49,6 +59,14 @@ int main(void)
         
         std::cout << "1- Search for players\n2- Invite a player\nEnter (1 / 2): ";
         std::cin >> opt;
+
+        if (std::cin.fail() || (opt != 1 && opt != 2)) {
+            std::cin.clear();
+            std::cin.ignore(32767, '\n');
+            PrintLine();
+            std::cout << "Invalid option, please enter a valid option." << std::endl;
+            goto SELECT_GAMEMODE;
+        }
         
         PrintLine();
 
@@ -67,12 +85,12 @@ int main(void)
         std::cout << "1- Start with chess\n2- Start with janggi\nEnter (1 / 2): ";
         std::cin >> opt;
 
-        if (opt != 1 && opt != 2)
+        if (std::cin.fail() || (opt != 1 && opt != 2))
         {
+            std::cin.clear();
+            std::cin.ignore(32767, '\n');
             PrintLine();
-
             std::cout << "Invalid option, please enter a valid option." << std::endl;
-
             goto SELECT_SIDE;
         }
 
