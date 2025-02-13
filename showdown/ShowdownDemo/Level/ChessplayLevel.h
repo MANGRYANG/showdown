@@ -8,7 +8,7 @@ class ChessplayLevel : public GameplayLevel
 	RTTI_DECLARATIONS(ChessplayLevel, GameplayLevel)
 
 public:
-	ChessplayLevel();
+	ChessplayLevel(int kingdomArrangement);
 	~ChessplayLevel();
 
 	virtual void Update(float deltaTime) override;

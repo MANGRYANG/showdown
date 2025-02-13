@@ -1,10 +1,10 @@
 #include "JanggiplayLevel.h"
 
-JanggiplayLevel::JanggiplayLevel()
+JanggiplayLevel::JanggiplayLevel(int kingdomArrangement)
     : GameplayLevel(false)
 {
 	int temp[9][9] = {
-		{2, 4, 3, 6, 0, 6, 4, 3, 2},
+		{2, 4, 3, 6, 6, 6, 4, 3, 2},
 		{5, 5, 5, 5, 5, 5, 5, 5, 5},
 		{-1, -1, -1, -1, -1, -1, -1, -1, -1},
 		{-1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -14,6 +14,8 @@ JanggiplayLevel::JanggiplayLevel()
 		{-1, -1, -1, -1, 7, -1, -1, -1, -1},
 		{11, 10, 9, 13, -1, 13, 10, 9, 11},
 	};
+
+    temp[0][kingdomArrangement + 2] = 0;
 
 	for (int i = 0; i < 9; ++i) {
 		for (int j = 0; j < 9; ++j) {

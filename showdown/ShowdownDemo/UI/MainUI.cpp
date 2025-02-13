@@ -47,41 +47,45 @@ void MainUI::ShowMenu()
 {
 SELECT_GAMEMODE:
 
-    std::cout << "1- Multiplay Mode\n2- Practice Mode\nEnter (1 / 2): ";
+    PrintText("1- Multiplay Mode\n2- Practice Mode\nEnter (1 / 2): ");
     std::cin >> gamemode_opt;
 
     if (std::cin.fail() || (gamemode_opt != 1 && gamemode_opt != 2)) {
         std::cin.clear();
         std::cin.ignore(32767, '\n');
         PrintLine();
-        std::cout << "Invalid option, please enter a valid option." << std::endl;
+        PrintText("Invalid option, please enter a valid option.\n");
+        PrintLine();
         goto SELECT_GAMEMODE;
     }
 
+    PrintLine();
+
     if (gamemode_opt == 1)
     {
-        PrintLine();
-
-        std::cout << "Enter your name: ";
+        PrintText("Enter your name: ");
         std::cin >> player_name;
 
         PrintLine();
 
-        std::cout << "1- Search for players\n2- Invite a player\nEnter (1 / 2): ";
+        MULTIPLAY_GAMEMODE:
+
+        PrintText("1- Search for players\n2- Invite a player\nEnter (1 / 2): ");
         std::cin >> opt;
 
         if (std::cin.fail() || (opt != 1 && opt != 2)) {
             std::cin.clear();
             std::cin.ignore(32767, '\n');
             PrintLine();
-            std::cout << "Invalid option, please enter a valid option." << std::endl;
-            goto SELECT_GAMEMODE;
+            PrintText("Invalid option, please enter a valid option.\n");
+            PrintLine();
+            goto MULTIPLAY_GAMEMODE;
         }
 
         PrintLine();
 
         // TODO : In development..
-        std::cout << "Still development..." << std::endl;
+        PrintText("Still development...");
 
         PrintLine();
 
@@ -89,10 +93,9 @@ SELECT_GAMEMODE:
     }
     else if (gamemode_opt == 2)
     {
-    SELECT_SIDE:
-        PrintLine();
+        SELECT_SIDE:
 
-        std::cout << "1- Start with chess\n2- Start with janggi\nEnter (1 / 2): ";
+        PrintText("1- Start with chess\n2- Start with janggi\nEnter (1 / 2): ");
         std::cin >> opt;
 
         if (std::cin.fail() || (opt != 1 && opt != 2))
@@ -100,28 +103,53 @@ SELECT_GAMEMODE:
             std::cin.clear();
             std::cin.ignore(32767, '\n');
             PrintLine();
-            std::cout << "Invalid option, please enter a valid option." << std::endl;
+            PrintText("Invalid option, please enter a valid option.\n");
+            PrintLine();
             goto SELECT_SIDE;
         }
 
         PrintLine();
 
-        std::cout << "Configuring the game.." << std::endl;
+        SELECT_KINGDOMPOSITION:
+        
+        PrintText("Select kingdom's position\n1- King Jester Jester\n2- Jester King Jester\n3- Jester Jester King\nEnter (1 / 2 / 3): ");
+
+        std::cin >> kingdomPosition;
+
+        if (std::cin.fail() || (kingdomPosition != 1 && kingdomPosition != 2 && kingdomPosition != 3))
+        {
+            std::cin.clear();
+            std::cin.ignore(32767, '\n');
+            PrintLine();
+            PrintText("Invalid option, please enter a valid option.\n");
+            PrintLine();
+            goto SELECT_KINGDOMPOSITION;
+        }
+
+        PrintLine();
+
+        PrintText("Configuring the game..\n");
 
         PrintLine();
 
         Sleep(1000);
 
+        PrintText("Complete!\n");
+
+        PrintLine();
+
+        Sleep(300);
+
         SingleplayGame singleplayGame;
 
         if (opt == 1)
         {
-            singleplayGame.LoadLevel(new ChessplayLevel());
+            singleplayGame.LoadLevel(new ChessplayLevel(kingdomPosition));
         }
 
         else if (opt == 2)
         {
-            singleplayGame.LoadLevel(new JanggiplayLevel());
+            singleplayGame.LoadLevel(new JanggiplayLevel(kingdomPosition));
         }
 
         singleplayGame.Run();
@@ -129,13 +157,20 @@ SELECT_GAMEMODE:
     }
     else
     {
-        PrintLine();
-
-        std::cout << "Invalid option, please enter a valid option." << std::endl;
+        PrintText("Invalid option, please enter a valid option.");
 
         PrintLine();
 
         goto SELECT_GAMEMODE;
+    }
+}
+
+void MainUI::PrintText(const char* text)
+{
+    for (int idx = 0; idx < strlen(text); ++idx)
+    {
+        std::cout << text[idx];
+        Sleep((text[idx] == ' ') ? 150 : 50);
     }
 }
 

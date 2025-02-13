@@ -8,7 +8,7 @@ class JanggiplayLevel : public GameplayLevel
 	RTTI_DECLARATIONS(JanggiplayLevel, GameplayLevel)
 
 public:
-	JanggiplayLevel();
+	JanggiplayLevel(int kingdomArrangement);
 	~JanggiplayLevel();
 
 	virtual void Update(float deltaTime) override;
