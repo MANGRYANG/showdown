@@ -26,6 +26,15 @@ void DrawableActor::Draw()
 	Engine::Get().Render(position, image, color);
 }
 
+void DrawableActor::SetImage(const char* newImage)
+{
+	auto length = strlen(newImage) + 1;
+	this->image = new char[length];
+	strcpy_s(this->image, length, newImage);
+
+	width = (int)strlen(newImage);
+}
+
 void DrawableActor::SetPosition(const Vector2& newPosition)
 {
 	Super::SetPosition(newPosition);

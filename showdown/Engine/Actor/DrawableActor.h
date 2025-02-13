@@ -12,6 +12,9 @@ public:
 	virtual ~DrawableActor();
 
 	virtual void Draw() override;
+
+	void SetImage(const char* newImage);
+
 	virtual void SetPosition(const Vector2& newPosition) override;
 	Vector2 GetPosition() const;
 

@@ -26,6 +26,11 @@ void Text::Update(float deltaTime)
 	Super::Update(deltaTime);
 }
 
+void Text::SetText(const char* newText)
+{
+	Super::SetImage(newText);
+}
+
 void Text::SetPosition(const Vector2& newPosition)
 {
 	Super::SetPosition(newPosition);

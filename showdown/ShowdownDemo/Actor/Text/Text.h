@@ -14,6 +14,8 @@ public:
 
 	virtual void Update(float deltaTime) override;
 
+	void SetText(const char* newText);
+
 	void SetPosition(const Vector2& newPosition);
 
 	void SetColor(Color color);

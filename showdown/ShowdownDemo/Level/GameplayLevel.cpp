@@ -29,14 +29,37 @@ GameplayLevel::GameplayLevel(bool isForward)
 {
     memset(board, -1, sizeof(board));
 
-    notationMessagePosition = BoardCoordToActorPosition(Vector2(0, 11));
-    gameOverMessagePosition = BoardCoordToActorPosition(Vector2(15, 0));
+    timerThread = std::thread(&GameplayLevel::TimerFunction, this);
+
+    GameplayLevel::AddActor(new Text("Time [", firstTimeMessagePosition));
+    GameplayLevel::AddActor(new Text("Time [", secondTimeMessagePosition));
+
+    GameplayLevel::AddActor(new Text("PALACE ", isForward ?
+        Vector2(firstTimeMessagePosition.xpos + 7, firstTimeMessagePosition.ypos) :
+        Vector2(secondTimeMessagePosition.xpos + 7, secondTimeMessagePosition.ypos), Color::Magenta));
+    GameplayLevel::AddActor(new Text("KINGDOM", isForward ?
+        Vector2(secondTimeMessagePosition.xpos + 7, secondTimeMessagePosition.ypos) :
+        Vector2(firstTimeMessagePosition.xpos + 7, firstTimeMessagePosition.ypos), Color::Cyan));
+
+    GameplayLevel::AddActor(new Text("]",
+        Vector2(firstTimeMessagePosition.xpos + 15, firstTimeMessagePosition.ypos)));
+    GameplayLevel::AddActor(new Text("]",
+        Vector2(secondTimeMessagePosition.xpos + 15, secondTimeMessagePosition.ypos)));
+
+    GameplayLevel::AddActor(&firstText);
+    GameplayLevel::AddActor(&secondText);
+
+    GameplayLevel::ProcessAddedAndDestroyedActor();
 
     GetAsyncKeyState(VK_LBUTTON & 1);
 }
 
 GameplayLevel::~GameplayLevel()
 {
+    timeLimitForChess = false;
+    if (timerThread.joinable()) {
+        timerThread.join();
+    }
 }
 
 void GameplayLevel::Update(float deltaTime)
@@ -163,7 +186,7 @@ void GameplayLevel::Update(float deltaTime)
             }
             else
             {
-                GameplayLevel::AddActor(new Text("EMPIRE",
+                GameplayLevel::AddActor(new Text("PALACE",
                     Vector2(TextLinePositionSetting(1, gameOverMessagePosition).xpos + 8, 
                         TextLinePositionSetting(1, gameOverMessagePosition).ypos), Color::Magenta));
             }
@@ -175,15 +198,12 @@ void GameplayLevel::Update(float deltaTime)
             GameplayLevel::ProcessAddedAndDestroyedActor();
         }
 
-
     }
     
     if (Engine::Get().GetKeyDown(VK_ESCAPE))
     {
         Engine::Get().Shutdown();
     }
-
-    
 }
 
 void GameplayLevel::Render()
@@ -212,11 +232,11 @@ void GameplayLevel::Render()
         }
     }
 
-    for (int i = 0; i < 7; ++i)
+    for (int i = 0; i < 4; ++i)
     {
         Engine::Get().Render(Vector2(39, 21 + i), "¦¢", Color::White);
     }
-    Engine::Get().Render(Vector2(0, 28), "_______________________________________/", Color::White);
+    Engine::Get().Render(Vector2(0, 25), "_______________________________________/", Color::White);
 
 }
 
@@ -539,6 +559,50 @@ void GameplayLevel::CheckStatusSetting()
     }
 }
 
+void GameplayLevel::TimerFunction()
+{
+    while (timerRunning && !isLevelStopped)
+    {
+        // 0.01 second
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+        if (isChessTurn) {
+            timeLimitForChess -= 1.0;
+            if (isForward)
+            {
+                secondText.SetText(DoubleToTime(timeLimitForChess).c_str());
+            }
+            else
+            {
+                firstText.SetText(DoubleToTime(timeLimitForChess).c_str());
+            }
+        }
+        else {
+            timeLimitForJanggi -= 1.0;
+            if (isForward)
+            {
+                firstText.SetText(DoubleToTime(timeLimitForJanggi).c_str());
+            }
+            else
+            {
+                secondText.SetText(DoubleToTime(timeLimitForJanggi).c_str());
+            }
+        }
+
+        if (timeLimitForChess <= 0) {
+            timerRunning = false;
+            isJanggiWin = true;
+            break;
+        }
+
+        if (timeLimitForJanggi <= 0) {
+            timerRunning = false;
+            isChessWin = true;
+            break;
+        }
+    }
+}
+
 bool GameplayLevel::IsMarked(Vector2 targetCoord)
 {
     Vector2 consolePosition = BoardCoordToActorPosition(targetCoord);
@@ -580,30 +644,38 @@ bool GameplayLevel::IsThreatenedPiece(Vector2 targetCoord)
 
 bool GameplayLevel::IsGameOver()
 {
-    isChessWin = true;
-    isJanggiWin = true;
-
-    for (int row = 0; row < 9; ++row)
-    {
-        for (int col = 0; col < 9; ++col)
-        {
-            if (board[row][col] == 0)
-            {
-                isJanggiWin = false;
-            }
-            if (board[row][col] == 7)
-            {
-                isChessWin = false;
-            }
-        }
-    }
-
-    if (isChessWin || isJanggiWin)
+    if (!timerRunning)
     {
         return true;
     }
+    else
+    {
+        isChessWin = true;
+        isJanggiWin = true;
 
-    return false;
+        for (int row = 0; row < 9; ++row)
+        {
+            for (int col = 0; col < 9; ++col)
+            {
+                if (board[row][col] == 0)
+                {
+                    isJanggiWin = false;
+                }
+                if (board[row][col] == 7)
+                {
+                    isChessWin = false;
+                }
+            }
+        }
+
+        if (isChessWin || isJanggiWin)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
 }
 
 Vector2 GameplayLevel::BoardCoordToActorPosition(Vector2 boardCoord)
@@ -623,3 +695,28 @@ Vector2 GameplayLevel::TextLinePositionSetting(int line, Vector2 startPosition)
 
     return result;
 }
+
+std::string GameplayLevel::DoubleToTime(double timeDouble)
+{
+    int tempTime = (int)timeDouble;
+    std::string result = "0";
+
+    result += std::to_string(tempTime / 6000);
+    tempTime = tempTime % 6000;
+    result += " : ";
+    if ((tempTime / 100) < 10)
+    {
+        result += "0";
+    }
+    result += std::to_string(tempTime / 100);
+    tempTime = tempTime % 100;
+    result += " : ";
+    if (tempTime < 10)
+    {
+        result += "0";
+    }
+    result += std::to_string(tempTime);
+
+    return result;
+}
+
