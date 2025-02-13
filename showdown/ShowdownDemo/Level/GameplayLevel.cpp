@@ -49,6 +49,10 @@ GameplayLevel::GameplayLevel(bool isForward)
     GameplayLevel::AddActor(&firstText);
     GameplayLevel::AddActor(&secondText);
 
+    GameplayLevel::AddActor(new Text("¢¸", isForward ?
+        Vector2(secondTimeMessagePosition.xpos + 33, secondTimeMessagePosition.ypos) :
+        Vector2(firstTimeMessagePosition.xpos + 33, firstTimeMessagePosition.ypos), Color::Yellow));
+
     GameplayLevel::ProcessAddedAndDestroyedActor();
 
     GetAsyncKeyState(VK_LBUTTON & 1);
@@ -139,6 +143,8 @@ void GameplayLevel::Update(float deltaTime)
                                     PrintNotation();
 
                                     isChessTurn = !isChessTurn;
+
+                                    SetTrianglePosition();
                                 }
 
                                 InitializeBoard();
@@ -160,6 +166,8 @@ void GameplayLevel::Update(float deltaTime)
                                     PrintNotation();
 
                                     isChessTurn = !isChessTurn;
+
+                                    SetTrianglePosition();
                                 }
                             }
 
@@ -599,6 +607,36 @@ void GameplayLevel::TimerFunction()
             timerRunning = false;
             isChessWin = true;
             break;
+        }
+    }
+}
+
+void GameplayLevel::SetTrianglePosition()
+{
+    if (!isChessTurn)
+    {
+        for (Actor* actor : actors)
+        {
+            Text* tempTextActor = dynamic_cast<Text*>(actor);
+            if (tempTextActor != nullptr &&
+                tempTextActor->GetPosition() ==
+                Vector2(secondTimeMessagePosition.xpos + 33, secondTimeMessagePosition.ypos))
+            {
+                tempTextActor->SetPosition(Vector2(firstTimeMessagePosition.xpos + 33, firstTimeMessagePosition.ypos));
+            }
+        }
+    }
+    else
+    {
+        for (Actor* actor : actors)
+        {
+            Text* tempTextActor = dynamic_cast<Text*>(actor);
+            if (tempTextActor != nullptr &&
+                tempTextActor->GetPosition() ==
+                Vector2(firstTimeMessagePosition.xpos + 33, firstTimeMessagePosition.ypos))
+            {
+                tempTextActor->SetPosition(Vector2(secondTimeMessagePosition.xpos + 33, secondTimeMessagePosition.ypos));
+            }
         }
     }
 }

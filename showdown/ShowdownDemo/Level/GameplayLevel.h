@@ -63,6 +63,8 @@ protected:
 
 	void TimerFunction();
 
+	void SetTrianglePosition();
+
 	bool IsMarked(Vector2 targetCoord);
 
 	bool IsThreatenedPiece(Vector2 targetCoord);
