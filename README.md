@@ -26,5 +26,7 @@ The CLI-based approach allows for a lightweight and accessible gameplay experien
 # Created By
 The game was created by [@MANGRYANG](https://github.com/mangryang)
 
+<br>
+
 # License and Contributions
 This project was developed for personal use and does not receive external contributions. Therefore, Pull Requests are not processed. There is no problem in referring to or using the project, and if necessary, feel free to fork and use it as a personal project.
