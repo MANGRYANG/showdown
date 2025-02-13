@@ -28,6 +28,8 @@
 #include "Math/Vector2.h"
 
 #include <conio.h>
+#include <chrono>
+#include <thread>
 #include <string>
 
 class GameplayLevel : public Level
@@ -59,6 +61,8 @@ protected:
 
 	void CheckStatusSetting();
 
+	void TimerFunction();
+
 	bool IsMarked(Vector2 targetCoord);
 
 	bool IsThreatenedPiece(Vector2 targetCoord);
@@ -69,6 +73,8 @@ protected:
 	Vector2 ActorPositionToBoardCoord(Vector2 actorPosition);
 
 	Vector2 TextLinePositionSetting(int line, Vector2 startPosition);
+
+	std::string DoubleToTime(double timeDouble);
 
 protected:
 	int board[9][9];
@@ -84,8 +90,12 @@ protected:
 	// Row, Column
 	Vector2 selectedBoardCoord;
 
-	Vector2 gameOverMessagePosition;
-	Vector2 notationMessagePosition;
+	Vector2 notationMessagePosition = Vector2(46, 1);
+	Vector2 firstTimeMessagePosition = Vector2(2, 22);
+	Vector2 secondTimeMessagePosition = Vector2(2, 24);
+	Vector2 firstTimerPosition = Vector2(20, 22);
+	Vector2 secondTimerPosition = Vector2(20, 24);
+	Vector2 gameOverMessagePosition = Vector2(2, 27);
 
 	std::string notationCounterText;
 	std::string currentNotation = "";
@@ -100,4 +110,13 @@ protected:
 	bool isJanggiWin = false;
 
 	bool isLevelStopped = false;
+
+	std::thread timerThread;
+	std::atomic<bool> timerRunning{ true };
+
+	double timeLimitForChess = 60000.0;
+	double timeLimitForJanggi = 60000.0;
+
+	Text firstText = Text("10 : 00 : 00", firstTimerPosition);
+	Text secondText = Text("10 : 00 : 00", secondTimerPosition);
 };
