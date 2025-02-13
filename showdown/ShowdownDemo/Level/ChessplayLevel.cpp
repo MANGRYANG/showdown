@@ -114,12 +114,12 @@ void ChessplayLevel::Render()
     }
 
     // Rendering Coordination Guide
-    Engine::Get().Render(Vector2(2, 19), "a   b   c   d   e   f   g   h   i", Color::White);
+    Engine::Get().Render(Vector2(2, 19), "a   b   c   d   e   f   g   h   i", Color::Yellow);
     Engine::Get().Render(Vector2(0, 20), "________________________________________/", Color::White);
 
     for (int i = 0; i < 9; ++i)
     {
-        Engine::Get().Render(Vector2(38, i * 2 + 1), std::to_string(9 - i).c_str(), Color::White);
+        Engine::Get().Render(Vector2(38, i * 2 + 1), std::to_string(9 - i).c_str(), Color::Yellow);
     }
 
     for (int i = 0; i < 20; ++i)
