@@ -207,11 +207,6 @@ void GameplayLevel::Update(float deltaTime)
         }
 
     }
-    
-    if (Engine::Get().GetKeyDown(VK_ESCAPE))
-    {
-        Engine::Get().Shutdown();
-    }
 }
 
 void GameplayLevel::Render()

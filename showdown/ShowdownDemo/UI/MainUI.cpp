@@ -112,7 +112,9 @@ SELECT_GAMEMODE:
 
         SELECT_KINGDOMPOSITION:
         
-        PrintText("Select kingdom's position\n1- King Jester Jester\n2- Jester King Jester\n3- Jester Jester King\nEnter (1 / 2 / 3): ");
+        PrintText("Select kingdom's position\n");
+        PrintTextFaster("1- King Jester Jester\n2- Jester King Jester\n3- Jester Jester King\n");
+        PrintText("Enter (1 / 2 / 3): ");
 
         std::cin >> kingdomPosition;
 
@@ -171,6 +173,15 @@ void MainUI::PrintText(const char* text)
     {
         std::cout << text[idx];
         Sleep((text[idx] == ' ') ? 150 : 50);
+    }
+}
+
+void MainUI::PrintTextFaster(const char* text)
+{
+    for (int idx = 0; idx < strlen(text); ++idx)
+    {
+        std::cout << text[idx];
+        Sleep(((text[idx] == ' ') ? 150 : 50) / 3);
     }
 }
 

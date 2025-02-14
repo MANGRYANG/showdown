@@ -18,6 +18,7 @@ private:
 	void PrintVersionInfo(unsigned int major, unsigned int minor, unsigned int patch);
 	void ShowMenu();
 	void PrintText(const char* text);
+	void PrintTextFaster(const char* text);
 	void PrintLine();
 
 	char player_name[1024];
